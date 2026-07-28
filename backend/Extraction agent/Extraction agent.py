@@ -69,13 +69,22 @@ logger.add(sys.stderr, level=os.getenv("LOG_LEVEL", "INFO"), enqueue=os.getenv("
 
 DEFAULT_GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 LLM_TIMEOUT_SECONDS = float(os.getenv("LLM_TIMEOUT_SECONDS", "90"))
+LLM_MAX_COMPLETION_TOKENS = int(os.getenv("LLM_MAX_COMPLETION_TOKENS", "256"))
+LLM_MAX_INPUT_CHARS_PER_CHUNK = int(os.getenv("LLM_MAX_INPUT_CHARS_PER_CHUNK", "2000"))
+LLM_TOTAL_INPUT_CHARS_PER_EXTRACTION = int(os.getenv("LLM_TOTAL_INPUT_CHARS_PER_EXTRACTION", "6000"))
+LLM_MAX_CHUNKS_PER_EXTRACTION = int(os.getenv("LLM_MAX_CHUNKS_PER_EXTRACTION", "3"))
+LLM_RETRY_ATTEMPTS = int(os.getenv("LLM_RETRY_ATTEMPTS", "1"))
+LLM_STRUCTURED_OUTPUT_ENABLED = os.getenv("LLM_STRUCTURED_OUTPUT_ENABLED", "0").lower() in {"1", "true", "yes"}
+LLM_PARSER_FALLBACK_ENABLED = os.getenv("LLM_PARSER_FALLBACK_ENABLED", "0").lower() in {"1", "true", "yes"}
+LLM_RAW_REPAIR_ENABLED = os.getenv("LLM_RAW_REPAIR_ENABLED", "0").lower() in {"1", "true", "yes"}
+APPROX_CHARS_PER_TOKEN = float(os.getenv("APPROX_CHARS_PER_TOKEN", "4"))
 MAX_UPLOAD_BYTES = int(os.getenv("MAX_UPLOAD_MB", "50")) * 1024 * 1024
 MAX_BATCH_FILES = int(os.getenv("MAX_BATCH_FILES", "10"))
 BATCH_CONCURRENCY = int(os.getenv("BATCH_CONCURRENCY", "2"))
 LLM_CONCURRENCY = int(os.getenv("LLM_CONCURRENCY", "3"))
 PDF_OCR_DPI_SCALE = float(os.getenv("PDF_OCR_DPI_SCALE", "2.0"))
-MAX_CHUNK_CHARS = int(os.getenv("MAX_CHUNK_CHARS", "24000"))
-CHUNK_OVERLAP_CHARS = int(os.getenv("CHUNK_OVERLAP_CHARS", "1200"))
+MAX_CHUNK_CHARS = int(os.getenv("MAX_CHUNK_CHARS", "12000"))
+CHUNK_OVERLAP_CHARS = int(os.getenv("CHUNK_OVERLAP_CHARS", "400"))
 MIN_NATIVE_PDF_CHARS_PER_PAGE = int(os.getenv("MIN_NATIVE_PDF_CHARS_PER_PAGE", "120"))
 SUPPORTED_EXTENSIONS = {".pdf", ".png", ".jpeg", ".jpg", ".bmp", ".tiff", ".tif", ".docx", ".txt", ".md", ".rtf", ".html", ".htm", ".json", ".xml", ".csv", ".tsv", ".xlsx", ".xls"}
 IMAGE_EXTENSIONS = {".png", ".jpeg", ".jpg", ".bmp", ".tiff", ".tif"}
@@ -88,15 +97,16 @@ CURRENCY_SYMBOLS = {"$": "USD", "\u20ac": "EUR", "\u00a3": "GBP", "\u20b9": "INR
 SCALAR_FINANCIAL_FIELDS = [
     "company_name",
     "ticker",
+    "reporting_period",
     "financial_year",
     "quarter",
     "currency",
-    "auditor",
-    "ceo",
-    "industry",
     "country",
+    "industry",
     "reporting_standard",
     "fiscal_period",
+    "auditor",
+    "ceo",
 ]
 METRIC_FINANCIAL_FIELDS = [
     "revenue",
@@ -108,6 +118,7 @@ METRIC_FINANCIAL_FIELDS = [
     "net_income",
     "net_profit",
     "eps",
+    "diluted_eps",
     "assets",
     "current_assets",
     "non_current_assets",
@@ -139,27 +150,229 @@ METRIC_FINANCIAL_FIELDS = [
     "quick_ratio",
     "debt_to_equity",
     "employees",
+    "dividend",
+    "shares_outstanding",
 ]
+METRIC_FIELD_DISPLAY_NAMES = {
+    "revenue": "Revenue",
+    "gross_revenue": "Gross Revenue",
+    "gross_profit": "Gross Profit",
+    "operating_income": "Operating Income",
+    "ebit": "EBIT",
+    "ebitda": "EBITDA",
+    "net_income": "Net Income",
+    "net_profit": "Net Profit",
+    "eps": "EPS",
+    "diluted_eps": "Diluted EPS",
+    "assets": "Total Assets",
+    "current_assets": "Current Assets",
+    "non_current_assets": "Non-current Assets",
+    "liabilities": "Total Liabilities",
+    "current_liabilities": "Current Liabilities",
+    "long_term_debt": "Long-term Debt",
+    "debt": "Debt",
+    "equity": "Equity",
+    "cash": "Cash",
+    "cash_equivalents": "Cash Equivalents",
+    "cash_flow": "Cash Flow",
+    "operating_cash_flow": "Operating Cash Flow",
+    "investing_cash_flow": "Investing Cash Flow",
+    "financing_cash_flow": "Financing Cash Flow",
+    "free_cash_flow": "Free Cash Flow",
+    "capital_expenditure": "Capital Expenditure",
+    "inventory": "Inventory",
+    "receivables": "Receivables",
+    "payables": "Payables",
+    "working_capital": "Working Capital",
+    "tax_expense": "Tax Expense",
+    "interest_expense": "Interest Expense",
+    "operating_margin": "Operating Margin",
+    "gross_margin": "Gross Margin",
+    "net_margin": "Net Margin",
+    "roa": "ROA",
+    "roe": "ROE",
+    "current_ratio": "Current Ratio",
+    "quick_ratio": "Quick Ratio",
+    "debt_to_equity": "Debt to Equity",
+    "employees": "Employees",
+    "dividend": "Dividend",
+    "shares_outstanding": "Shares Outstanding",
+}
+METRIC_FIELD_ALIASES = {
+    "revenue": ("revenue", "net revenue", "sales", "net sales", "turnover", "total revenue", "operating revenue"),
+    "gross_revenue": ("gross revenue",),
+    "gross_profit": ("gross profit", "gross income"),
+    "operating_income": ("operating income", "operating profit", "operating earnings", "income from operations"),
+    "ebit": ("ebit", "earnings before interest and taxes"),
+    "ebitda": ("ebitda", "earnings before interest taxes depreciation and amortization"),
+    "net_income": ("net income", "net earnings", "profit attributable to shareholders"),
+    "net_profit": ("net profit", "profit after tax", "pat", "profit for the year", "profit for the period"),
+    "eps": ("eps", "basic eps", "earnings per share", "basic earnings per share"),
+    "diluted_eps": ("diluted eps", "diluted earnings per share"),
+    "assets": ("assets", "total assets"),
+    "current_assets": ("current assets", "total current assets"),
+    "non_current_assets": ("non current assets", "non-current assets", "total non current assets", "total non-current assets"),
+    "liabilities": ("liabilities", "total liabilities"),
+    "current_liabilities": ("current liabilities", "total current liabilities"),
+    "long_term_debt": ("long term debt", "long-term debt", "non current debt", "non-current debt", "long term borrowings"),
+    "debt": ("debt", "total debt", "borrowings"),
+    "equity": ("equity", "shareholders equity", "stockholders equity", "total equity"),
+    "cash": ("cash", "cash balance"),
+    "cash_equivalents": ("cash equivalents", "cash and cash equivalents"),
+    "cash_flow": ("cash flow", "net cash flow"),
+    "operating_cash_flow": ("operating cash flow", "cash flow from operating activities", "net cash from operating activities"),
+    "investing_cash_flow": ("investing cash flow", "cash flow from investing activities", "net cash used in investing activities"),
+    "financing_cash_flow": ("financing cash flow", "cash flow from financing activities", "net cash from financing activities"),
+    "free_cash_flow": ("free cash flow", "fcf"),
+    "capital_expenditure": ("capital expenditure", "capital expenditures", "capex", "capital spending"),
+    "inventory": ("inventory", "inventories"),
+    "receivables": ("receivables", "accounts receivable", "trade receivables"),
+    "payables": ("payables", "accounts payable", "trade payables"),
+    "working_capital": ("working capital",),
+    "tax_expense": ("tax expense", "income tax expense", "taxes"),
+    "interest_expense": ("interest expense", "finance cost", "finance costs"),
+    "operating_margin": ("operating margin",),
+    "gross_margin": ("gross margin",),
+    "net_margin": ("net margin",),
+    "roa": ("roa", "return on assets"),
+    "roe": ("roe", "return on equity"),
+    "current_ratio": ("current ratio",),
+    "quick_ratio": ("quick ratio",),
+    "debt_to_equity": ("debt to equity", "debt-to-equity", "debt equity ratio"),
+    "employees": ("employees", "headcount", "number of employees"),
+    "dividend": ("dividend", "dividends", "dividend paid", "dividends paid"),
+    "shares_outstanding": ("shares outstanding", "weighted average shares", "ordinary shares outstanding"),
+}
+COMPANY_INFO_FIELD_ALIASES = {
+    "company_name": ("company name", "company", "issuer", "registrant", "entity name"),
+    "ticker": ("ticker", "ticker symbol", "stock symbol", "symbol"),
+    "reporting_period": ("reporting period", "period reported", "period covered"),
+    "financial_year": ("financial year", "fiscal year", "fy", "year ended"),
+    "quarter": ("quarter", "fiscal quarter"),
+    "currency": ("currency", "presentation currency", "reporting currency"),
+    "country": ("country", "jurisdiction", "country of incorporation"),
+    "industry": ("industry", "sector"),
+    "reporting_standard": ("reporting standard", "accounting standard", "ifrs", "gaap"),
+    "fiscal_period": ("fiscal period",),
+    "auditor": ("auditor", "independent auditor"),
+    "ceo": ("ceo", "chief executive officer"),
+}
+DEFAULT_METRIC_CONFIDENCE = float(os.getenv("DEFAULT_METRIC_CONFIDENCE", "0.86"))
+DEFAULT_COMPANY_INFO_CONFIDENCE = float(os.getenv("DEFAULT_COMPANY_INFO_CONFIDENCE", "0.82"))
+LOCAL_FALLBACK_CONFIDENCE = float(os.getenv("LOCAL_FALLBACK_CONFIDENCE", "0.88"))
+SUPPORTED_CURRENCY_CODES = {"USD", "EUR", "GBP", "INR", "CAD", "AUD", "JPY", "CNY", "CHF", "SGD", "HKD", "AED"}
+LEGAL_ENTITY_SUFFIX_PATTERN = re.compile(
+    r"\b(?:LIMITED|LTD\.?|PRIVATE LIMITED|PVT\.?\s+LTD\.?|INC\.?|INCORPORATED|CORPORATION|CORP\.?|PLC|LLC|LLP)\b",
+    re.IGNORECASE,
+)
+COMPANY_NAME_EXCLUDE_PATTERN = re.compile(r"\b(?:auditor|associates|board|approval|meeting|agm|director|committee|report|statement)\b", re.IGNORECASE)
 
 
-class FinancialMetricValue(BaseModel):
-    model_config = ConfigDict(extra="forbid")
 
-    metric: Optional[str] = Field(default=None, description="The normalized metric name.")
-    value: Optional[Union[float, int, str]] = Field(default=None, description="The extracted value. Use null when unknown.")
-    raw_value: Optional[str] = Field(default=None, description="The exact value text from the document when available.")
-    normalized_value: Optional[float] = Field(default=None, description="A numeric normalized value when safely derivable.")
-    currency: Optional[str] = Field(default=None, description="ISO currency code when applicable.")
-    scale: Optional[str] = Field(default=None, description="Scale such as thousands, millions, billions, or percent.")
-    period: Optional[str] = Field(default=None, description="Associated reporting period when available.")
-    source_text: Optional[str] = Field(default=None, description="Short source snippet supporting the value.")
-    page: Optional[int] = Field(default=None, description="One-based source page when known.")
-    confidence: float = Field(default=0.0, ge=0.0, le=1.0, description="Confidence from 0 to 1.")
+class Metric(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    metric: str = Field(description="Metric label exactly found or its closest canonical financial metric name.")
+    value: str = Field(description="Value exactly present in the chunk.")
+    unit: Optional[str] = Field(default=None, description="Currency, percent, shares, or scale when explicitly present.")
+    period: Optional[str] = Field(default=None, description="Associated period when explicitly present.")
+    page_number: Optional[Union[int, str]] = Field(default=None, description="Page number when explicitly present.")
+    confidence: Optional[float] = Field(default=None, ge=0.0, le=1.0, description="Extraction confidence from 0 to 1.")
+
+    @field_validator("metric", "value", mode="before")
+    @classmethod
+    def validate_required_text(cls, value: Any) -> str:
+        text = safe_string(value)
+        if text is None:
+            raise ValueError("required text field is empty")
+        return text
+
+    @field_validator("unit", "period", mode="before")
+    @classmethod
+    def validate_optional_text(cls, value: Any) -> Optional[str]:
+        return safe_string(value)
+
+    @field_validator("page_number", mode="before")
+    @classmethod
+    def validate_page_number(cls, value: Any) -> Optional[Union[int, str]]:
+        text = safe_string(value)
+        if text is None:
+            return None
+        if re.fullmatch(r"\d+", text):
+            return int(text)
+        return text
 
     @field_validator("confidence", mode="before")
     @classmethod
-    def validate_confidence(cls, value: Any) -> float:
+    def validate_confidence(cls, value: Any) -> Optional[float]:
+        if value is None or value == "":
+            return None
         return clamp_float(value, 0.0, 1.0)
+
+
+class CompanyInfoFact(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    field: str = Field(description="Company information field explicitly present in the chunk.")
+    value: str = Field(description="Value exactly present in the chunk.")
+    page_number: Optional[Union[int, str]] = Field(default=None)
+    confidence: Optional[float] = Field(default=None, ge=0.0, le=1.0)
+
+    @field_validator("field", "value", mode="before")
+    @classmethod
+    def validate_required_text(cls, value: Any) -> str:
+        text = safe_string(value)
+        if text is None:
+            raise ValueError("required text field is empty")
+        return text
+
+    @field_validator("page_number", mode="before")
+    @classmethod
+    def validate_page_number(cls, value: Any) -> Optional[Union[int, str]]:
+        text = safe_string(value)
+        if text is None:
+            return None
+        if re.fullmatch(r"\d+", text):
+            return int(text)
+        return text
+
+    @field_validator("confidence", mode="before")
+    @classmethod
+    def validate_confidence(cls, value: Any) -> Optional[float]:
+        if value is None or value == "":
+            return None
+        return clamp_float(value, 0.0, 1.0)
+
+
+class ChunkFinancialFacts(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    metrics: List[Metric] = Field(default_factory=list)
+    company_info: List[CompanyInfoFact] = Field(default_factory=list)
+
+    @field_validator("metrics", "company_info", mode="before")
+    @classmethod
+    def validate_list(cls, value: Any) -> List[Any]:
+        if value is None or value == "":
+            return []
+        if isinstance(value, list):
+            return value
+        if isinstance(value, dict):
+            return [value]
+        return []
+
+
+class FinancialMetricValue(Metric):
+    raw_value: Optional[str] = Field(default=None, description="Legacy exact value field, populated only when different from value.")
+    normalized_value: Optional[float] = Field(default=None, description="Numeric normalized value when safely derived by Python.")
+    currency: Optional[str] = Field(default=None, description="ISO currency code when explicitly present.")
+    scale: Optional[str] = Field(default=None, description="Scale such as thousands, millions, billions, or percent when explicitly present.")
+    page: Optional[int] = Field(default=None, description="Legacy one-based page number when known.")
+
+    @field_validator("raw_value", "currency", "scale", mode="before")
+    @classmethod
+    def validate_optional_legacy_text(cls, value: Any) -> Optional[str]:
+        return safe_string(value)
 
     @field_validator("normalized_value", mode="before")
     @classmethod
@@ -178,9 +391,16 @@ class ExtractedFinancialData(BaseModel):
 
     company_name: Optional[str] = Field(default=None)
     ticker: Optional[str] = Field(default=None)
+    reporting_period: Optional[str] = Field(default=None)
     financial_year: Optional[str] = Field(default=None)
     quarter: Optional[str] = Field(default=None)
     currency: Optional[str] = Field(default=None)
+    country: Optional[str] = Field(default=None)
+    industry: Optional[str] = Field(default=None)
+    reporting_standard: Optional[str] = Field(default=None)
+    fiscal_period: Optional[str] = Field(default=None)
+    company_info: Dict[str, str] = Field(default_factory=dict)
+    metrics: List[FinancialMetricValue] = Field(default_factory=list)
     revenue: Optional[FinancialMetricValue] = Field(default=None)
     gross_revenue: Optional[FinancialMetricValue] = Field(default=None)
     gross_profit: Optional[FinancialMetricValue] = Field(default=None)
@@ -190,6 +410,7 @@ class ExtractedFinancialData(BaseModel):
     net_income: Optional[FinancialMetricValue] = Field(default=None)
     net_profit: Optional[FinancialMetricValue] = Field(default=None)
     eps: Optional[FinancialMetricValue] = Field(default=None)
+    diluted_eps: Optional[FinancialMetricValue] = Field(default=None)
     assets: Optional[FinancialMetricValue] = Field(default=None)
     current_assets: Optional[FinancialMetricValue] = Field(default=None)
     non_current_assets: Optional[FinancialMetricValue] = Field(default=None)
@@ -223,10 +444,8 @@ class ExtractedFinancialData(BaseModel):
     auditor: Optional[str] = Field(default=None)
     ceo: Optional[str] = Field(default=None)
     employees: Optional[FinancialMetricValue] = Field(default=None)
-    industry: Optional[str] = Field(default=None)
-    country: Optional[str] = Field(default=None)
-    reporting_standard: Optional[str] = Field(default=None)
-    fiscal_period: Optional[str] = Field(default=None)
+    dividend: Optional[FinancialMetricValue] = Field(default=None)
+    shares_outstanding: Optional[FinancialMetricValue] = Field(default=None)
     confidence_score: float = Field(default=0.0, ge=0.0, le=1.0)
     all_financial_values: List[FinancialMetricValue] = Field(default_factory=list)
 
@@ -371,8 +590,27 @@ def add_warning(state: ExtractionState, message: str) -> None:
     state["warnings"] = warnings
 
 
+def dump_financial_data(data: ExtractedFinancialData) -> Dict[str, Any]:
+    payload = data.model_dump(mode="json", exclude_none=True)
+    if not payload.get("company_info"):
+        payload.pop("company_info", None)
+    return payload
+
+
+def dump_chunk_facts(data: ChunkFinancialFacts) -> Dict[str, Any]:
+    payload = data.model_dump(mode="json", exclude_none=True)
+    if not payload.get("company_info"):
+        payload.pop("company_info", None)
+    payload.setdefault("metrics", [])
+    return payload
+
+
+def empty_chunk_financial_facts() -> Dict[str, Any]:
+    return dump_chunk_facts(ChunkFinancialFacts())
+
+
 def empty_financial_data() -> Dict[str, Any]:
-    return ExtractedFinancialData().model_dump(mode="json")
+    return dump_financial_data(ExtractedFinancialData())
 
 
 def get_extension_from_zip(data: bytes) -> str:
@@ -1081,7 +1319,7 @@ def normalize_dates_in_text(text: str) -> str:
 
 
 def normalize_currencies_in_text(text: str) -> str:
-    currency_pattern = re.compile(r"(?P<currency>USD|EUR|GBP|INR|CAD|AUD|JPY|[$\u20ac\u00a3\u20b9\u00a5])\s*(?P<number>\(?[-+]?\d[\d,]*(?:\.\d+)?\)?)(?P<scale>\s*(?:thousand|million|billion|trillion|k|m|bn|b))?", re.IGNORECASE)
+    currency_pattern = re.compile(r"(?P<currency>USD|EUR|GBP|INR|CAD|AUD|JPY|[$\u20ac\u00a3\u20b9\u00a5])\s*(?P<number>\(?[-+]?\d[\d,]*(?:\.\d+)?\)?)(?P<scale>\s*(?:thousand|million|billion|trillion|crore|crores|cr|lakh|lakhs|k|m|bn|b))?", re.IGNORECASE)
 
     def replace(match: re.Match[str]) -> str:
         currency = match.group("currency")
@@ -1174,29 +1412,278 @@ def chunk_text(text: str) -> List[Dict[str, Any]]:
     return chunks
 
 
-FINANCIAL_PARSER = PydanticOutputParser(pydantic_object=ExtractedFinancialData)
+def normalize_company_name_text(value: Any) -> Optional[str]:
+    text = safe_string(value)
+    if text is None:
+        return None
+    text = re.sub(r"(?i)^\s*microsoft\s+word\s*[-:]+\s*", "", text)
+    text = re.sub(r"[_]+", " ", text)
+    text = re.sub(r"\s+", " ", text).strip(" -??:;,.\t")
+    for delimiter in (" - ", " ? ", " ? ", " | "):
+        if delimiter in text:
+            parts = [part.strip(" -??:;,.\t") for part in text.split(delimiter) if part.strip()]
+            legal_parts = [part for part in parts if LEGAL_ENTITY_SUFFIX_PATTERN.search(part)]
+            if legal_parts:
+                text = legal_parts[-1]
+                break
+    text = re.sub(r"(?i)\b(?:annual report|financial statements?|integrated report|final|draft)\b", "", text)
+    text = re.sub(r"\s+", " ", text).strip(" -??:;,.\t")
+    if not text or len(text) > 140:
+        return None
+    if text[0].islower() or "." in text or "," in text:
+        return None
+    if COMPANY_NAME_EXCLUDE_PATTERN.search(text):
+        return None
+    if not LEGAL_ENTITY_SUFFIX_PATTERN.search(text):
+        return None
+    if text.upper() == text:
+        keep_upper = {"LLC", "LLP", "PLC", "LTD", "PVT"}
+        words = [word if word in keep_upper else word.capitalize() for word in text.split()]
+        return " ".join(words)
+    return text
+
+
+def looks_like_company_name_line(line: str) -> bool:
+    return normalize_company_name_text(line) is not None
+
+
+def extract_company_name_from_metadata(metadata: Dict[str, Any]) -> Optional[str]:
+    for key in ("title", "subject", "company", "document_title"):
+        company_name = normalize_company_name_text(metadata.get(key))
+        if company_name:
+            return company_name
+    return None
+
+
+def extract_company_name_from_text(text: str) -> Optional[str]:
+    lines = [line.strip() for line in (text or "").splitlines() if line.strip()]
+    for line in lines[:180]:
+        labelled = value_after_label_prefix(line, "company name") or value_after_label_prefix(line, "company")
+        company_name = normalize_company_name_text(labelled) if labelled else normalize_company_name_text(line)
+        if company_name:
+            return company_name
+    return None
+
+
+def detect_currency_code_from_text(value: Any) -> Optional[str]:
+    text = safe_string(value)
+    if text is None:
+        return None
+    for symbol, code in CURRENCY_SYMBOLS.items():
+        if symbol in text:
+            return code
+    match = re.search(r"\b(?:USD|EUR|GBP|INR|CAD|AUD|JPY|CNY|CHF|SGD|HKD|AED)\b", text, flags=re.IGNORECASE)
+    return match.group(0).upper() if match else None
+
+
+def extract_currency_from_financial_data(financial_data: Dict[str, Any]) -> Optional[str]:
+    counts: Dict[str, int] = {}
+
+    def add_currency(value: Any) -> None:
+        code = detect_currency_code_from_text(value)
+        if code:
+            counts[code] = counts.get(code, 0) + 1
+
+    for metric in financial_data.get("metrics") or financial_data.get("all_financial_values") or []:
+        if isinstance(metric, dict):
+            add_currency(metric.get("currency"))
+            add_currency(metric.get("unit"))
+            add_currency(metric.get("value"))
+            add_currency(metric.get("raw_value"))
+    for field in METRIC_FINANCIAL_FIELDS:
+        metric = financial_data.get(field)
+        if isinstance(metric, dict):
+            add_currency(metric.get("currency"))
+            add_currency(metric.get("unit"))
+            add_currency(metric.get("value"))
+            add_currency(metric.get("raw_value"))
+    if not counts:
+        return None
+    return sorted(counts.items(), key=lambda item: item[1], reverse=True)[0][0]
+
+
+def augment_financial_data_with_context(financial_data: Dict[str, Any], metadata: Dict[str, Any], text: str) -> Dict[str, Any]:
+    data = dict(financial_data or {})
+    company_info = dict(data.get("company_info") or {}) if isinstance(data.get("company_info"), dict) else {}
+    metadata_company_name = extract_company_name_from_metadata(metadata or {})
+    text_company_name = extract_company_name_from_text(text or "")
+    preferred_company_name = metadata_company_name or text_company_name
+    current_company_name = normalize_company_name_text(data.get("company_name"))
+    if preferred_company_name and (metadata_company_name or not current_company_name):
+        data["company_name"] = preferred_company_name
+        company_info["company_name"] = preferred_company_name
+    elif current_company_name:
+        data["company_name"] = current_company_name
+        company_info.setdefault("company_name", current_company_name)
+    else:
+        data.pop("company_name", None)
+        company_info.pop("company_name", None)
+    if not data.get("currency"):
+        currency = extract_currency_from_financial_data(data) or detect_currency_code_from_text(text[:12000] if text else "")
+        if currency:
+            data["currency"] = currency
+            company_info["currency"] = currency
+    if company_info:
+        data["company_info"] = company_info
+    return dump_financial_data(ExtractedFinancialData.model_validate(data))
+
+
+def approximate_token_count(text: str) -> int:
+    divisor = max(1.0, APPROX_CHARS_PER_TOKEN)
+    return int(math.ceil(len(text or "") / divisor))
+
+
+def is_financial_signal_line(line: str) -> bool:
+    clean = safe_string(line) or ""
+    if not clean:
+        return False
+    key = label_key(clean)
+    if looks_like_company_name_line(clean):
+        return True
+    has_value = bool(re.search(r"(?i)(?:USD|EUR|GBP|INR|CAD|AUD|JPY|CNY|CHF|SGD|HKD|AED|[$????])|\d", clean))
+    if "\t" in clean and has_value:
+        return True
+    for aliases in METRIC_FIELD_ALIASES.values():
+        if any(label_key(alias) in key for alias in aliases) and has_value:
+            return True
+    for aliases in COMPANY_INFO_FIELD_ALIASES.values():
+        if any(label_key(alias) in key for alias in aliases) and re.search(r"[:=\-??\t]", clean):
+            return True
+    return False
+
+
+def compact_chunk_for_llm(text: str, max_chars: int) -> Tuple[str, bool]:
+    source = text or ""
+    if max_chars <= 0:
+        return "", bool(source)
+    if len(source) <= max_chars:
+        return source, False
+    lines = source.splitlines()
+    selected: List[str] = []
+    seen: set[str] = set()
+    current_page: Optional[str] = None
+    for line in lines:
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if re.search(r"\b(?:page|ocr page)\s+\d+\b", stripped, flags=re.IGNORECASE):
+            current_page = stripped
+            continue
+        if not is_financial_signal_line(stripped):
+            continue
+        if current_page and current_page.lower() not in seen:
+            selected.append(current_page)
+            seen.add(current_page.lower())
+        signature = re.sub(r"\s+", " ", stripped).lower()
+        if signature not in seen:
+            selected.append(stripped)
+            seen.add(signature)
+    compacted = "\n".join(selected).strip() or source[:max_chars]
+    if len(compacted) <= max_chars:
+        return compacted, True
+    output: List[str] = []
+    used = 0
+    for line in compacted.splitlines():
+        line_length = len(line) + 1
+        if output and used + line_length > max_chars:
+            break
+        if not output and line_length > max_chars:
+            output.append(line[:max_chars])
+            used = max_chars
+            break
+        output.append(line)
+        used += line_length
+    return "\n".join(output).strip(), True
+
+
+def budget_chunks_for_llm(chunks: List[Dict[str, Any]]) -> Tuple[List[Dict[str, Any]], List[Tuple[Dict[str, Any], str]], Dict[str, Any], List[str]]:
+    llm_chunks: List[Dict[str, Any]] = []
+    local_chunks: List[Tuple[Dict[str, Any], str]] = []
+    warnings: List[str] = []
+    total_budget = max(0, LLM_TOTAL_INPUT_CHARS_PER_EXTRACTION)
+    per_chunk_budget = max(0, LLM_MAX_INPUT_CHARS_PER_CHUNK)
+    max_chunks = max(0, LLM_MAX_CHUNKS_PER_EXTRACTION)
+    remaining = total_budget
+    original_chars = sum(len(chunk.get("text", "")) for chunk in chunks)
+    sent_chars = 0
+    truncated_chunks = 0
+
+    for chunk in chunks:
+        chunk_index = chunk.get("index", len(llm_chunks) + len(local_chunks) + 1)
+        if len(llm_chunks) >= max_chunks:
+            local_chunks.append((chunk, f"LLM chunk budget reached ({max_chunks} chunks per extraction)"))
+            continue
+        if remaining <= 0 or per_chunk_budget <= 0:
+            local_chunks.append((chunk, f"LLM input character budget reached ({total_budget} chars per extraction)"))
+            continue
+        chunk_budget = min(per_chunk_budget, remaining)
+        compacted_text, was_truncated = compact_chunk_for_llm(chunk.get("text", ""), chunk_budget)
+        if not compacted_text.strip():
+            local_chunks.append((chunk, "Chunk contained no text after LLM budget compaction"))
+            continue
+        budgeted_chunk = dict(chunk)
+        budgeted_chunk["text"] = compacted_text
+        budgeted_chunk["llm_character_count"] = len(compacted_text)
+        budgeted_chunk["llm_truncated"] = was_truncated
+        llm_chunks.append(budgeted_chunk)
+        sent_chars += len(compacted_text)
+        remaining -= len(compacted_text)
+        if was_truncated:
+            truncated_chunks += 1
+
+    stats = {
+        "groq_completion_token_cap_per_call": LLM_MAX_COMPLETION_TOKENS,
+        "groq_retry_attempts_per_chain": LLM_RETRY_ATTEMPTS,
+        "structured_output_enabled": LLM_STRUCTURED_OUTPUT_ENABLED,
+        "parser_fallback_enabled": LLM_PARSER_FALLBACK_ENABLED,
+        "raw_repair_enabled": LLM_RAW_REPAIR_ENABLED,
+        "max_groq_calls_per_chunk": 1 + int(LLM_PARSER_FALLBACK_ENABLED) + int(LLM_RAW_REPAIR_ENABLED),
+        "input_char_budget_per_chunk": per_chunk_budget,
+        "input_char_budget_per_extraction": total_budget,
+        "max_llm_chunks_per_extraction": max_chunks,
+        "source_chunk_count": len(chunks),
+        "groq_chunk_count": len(llm_chunks),
+        "fallback_chunk_count": len(local_chunks),
+        "source_input_chars": original_chars,
+        "groq_input_chars": sent_chars,
+        "estimated_groq_input_tokens_per_attempt": approximate_token_count("x" * sent_chars),
+        "estimated_max_groq_input_tokens_with_retries": approximate_token_count("x" * sent_chars) * LLM_RETRY_ATTEMPTS * (1 + int(LLM_PARSER_FALLBACK_ENABLED) + int(LLM_RAW_REPAIR_ENABLED)),
+        "compacted_chunk_count": truncated_chunks,
+    }
+    return llm_chunks, local_chunks, stats, warnings
+
+
+FINANCIAL_FACT_PARSER = PydanticOutputParser(pydantic_object=ChunkFinancialFacts)
+FINANCIAL_PARSER = FINANCIAL_FACT_PARSER
 JSON_OUTPUT_PARSER = JsonOutputParser()
+FINANCIAL_METRIC_GUIDE = (
+    "Revenue/net revenue/sales; gross profit; operating income/profit; EBIT; EBITDA; "
+    "net income/net profit/PAT; EPS/diluted EPS; cash/cash equivalents; assets/current/non-current assets; "
+    "liabilities/current liabilities; long-term debt/debt/equity; operating/investing/financing/free cash flow; "
+    "capital expenditure/capex; dividend; shares outstanding."
+)
 FINANCIAL_PROMPT = PromptTemplate(
-    input_variables=["chunk_index", "chunk_count", "document_text", "known_metadata"],
-    partial_variables={"format_instructions": FINANCIAL_PARSER.get_format_instructions()},
+    input_variables=["chunk_index", "chunk_count", "document_text"],
+    partial_variables={"metric_guide": FINANCIAL_METRIC_GUIDE},
     template=(
-        "You are a deterministic financial document extraction system. Extract only values explicitly present in the provided document chunk. "
-        "Do not infer unavailable facts. Use null for unknown values. Prefer exact source values and include short supporting source_text snippets. "
-        "Normalize metric names to the schema. Preserve currencies, periods, scale, and confidence. Return only valid JSON matching the schema.\n\n"
-        "{format_instructions}\n\n"
-        "Known metadata JSON:\n{known_metadata}\n\n"
-        "Chunk {chunk_index} of {chunk_count}:\n{document_text}"
+        "Extract only financial facts explicitly written in this chunk. Do not infer, calculate, compare, analyse, summarize, or fill blanks. "
+        "Do not output null fields. If a metric or company fact is absent, omit it.\n"
+        "Return compact JSON only. Empty result: {{\"metrics\":[]}}.\n"
+        "Metric item keys: metric, value, unit, period, page_number, confidence. Include optional keys only when explicit.\n"
+        "If explicit company facts appear, add company_info items with keys field, value, page_number, confidence.\n"
+        "Recognize synonyms for: {metric_guide}\n\n"
+        "Chunk {chunk_index}/{chunk_count}:\n{document_text}"
     ),
 )
 
 STRUCTURED_FINANCIAL_PROMPT = PromptTemplate(
-    input_variables=["chunk_index", "chunk_count", "document_text", "known_metadata"],
+    input_variables=["chunk_index", "chunk_count", "document_text"],
+    partial_variables={"metric_guide": FINANCIAL_METRIC_GUIDE},
     template=(
-        "You are a deterministic financial document extraction system. Extract only values explicitly present in the provided document chunk. "
-        "Do not infer unavailable facts. Use null for unknown values. Prefer exact source values and include short supporting source_text snippets. "
-        "Normalize metric names to the provided structured schema. Preserve currencies, periods, scale, and confidence.\n\n"
-        "Known metadata JSON:\n{known_metadata}\n\n"
-        "Chunk {chunk_index} of {chunk_count}:\n{document_text}"
+        "Extract only financial facts explicitly written in this chunk. Do not infer, calculate, compare, analyse, summarize, or fill blanks. "
+        "Return only detected facts in the response schema; omit absent optional fields and never emit nulls.\n"
+        "Recognize synonyms for: {metric_guide}\n\n"
+        "Chunk {chunk_index}/{chunk_count}:\n{document_text}"
     ),
 )
 
@@ -1207,12 +1694,19 @@ def get_llm() -> ChatGroq:
     if not api_key:
         raise MissingGroqAPIKeyError()
     model = os.getenv("GROQ_MODEL", DEFAULT_GROQ_MODEL)
-    key = (api_key, model)
+    key = (api_key, model, LLM_MAX_COMPLETION_TOKENS)
     with LLM_LOCK:
         if LLM_INSTANCE is None or LLM_INSTANCE_KEY != key:
-            LLM_INSTANCE = ChatGroq(model=model, temperature=0, groq_api_key=api_key, timeout=LLM_TIMEOUT_SECONDS, max_retries=0)
+            LLM_INSTANCE = ChatGroq(
+                model=model,
+                temperature=0,
+                groq_api_key=api_key,
+                timeout=LLM_TIMEOUT_SECONDS,
+                max_retries=0,
+                max_tokens=LLM_MAX_COMPLETION_TOKENS,
+            )
             LLM_INSTANCE_KEY = key
-            logger.info("LLM initialized with Groq model {model}", model=model)
+            logger.info("LLM initialized with Groq model {model} max_tokens={max_tokens}", model=model, max_tokens=LLM_MAX_COMPLETION_TOKENS)
     return LLM_INSTANCE
 
 
@@ -1221,15 +1715,17 @@ def get_chains() -> Tuple[Any, Any, Any]:
     llm = get_llm()
     model = os.getenv("GROQ_MODEL", DEFAULT_GROQ_MODEL)
     api_key = os.getenv("GROQ_API_KEY") or ""
-    key = (api_key, model)
+    key = (api_key, model, LLM_MAX_COMPLETION_TOKENS)
     with LLM_LOCK:
         if CHAIN_KEY != key or PARSER_CHAIN is None or RAW_CHAIN is None:
-            try:
-                structured_llm = llm.with_structured_output(ExtractedFinancialData)
-                STRUCTURED_CHAIN = STRUCTURED_FINANCIAL_PROMPT | structured_llm
-            except Exception:
-                STRUCTURED_CHAIN = None
-            PARSER_CHAIN = FINANCIAL_PROMPT | llm | FINANCIAL_PARSER
+            STRUCTURED_CHAIN = None
+            if LLM_STRUCTURED_OUTPUT_ENABLED:
+                try:
+                    structured_llm = llm.with_structured_output(ChunkFinancialFacts)
+                    STRUCTURED_CHAIN = STRUCTURED_FINANCIAL_PROMPT | structured_llm
+                except Exception:
+                    STRUCTURED_CHAIN = None
+            PARSER_CHAIN = FINANCIAL_PROMPT | llm | FINANCIAL_FACT_PARSER
             RAW_CHAIN = FINANCIAL_PROMPT | llm
             CHAIN_KEY = key
     return STRUCTURED_CHAIN, PARSER_CHAIN, RAW_CHAIN
@@ -1248,146 +1744,501 @@ def before_sleep_log(retry_state: Any) -> None:
     logger.warning("Retrying LLM call attempt {attempt} after error: {error}", attempt=retry_state.attempt_number, error=str(exception))
 
 
-@retry(retry=retry_if_exception(is_transient_exception), wait=wait_exponential(multiplier=1, min=1, max=12), stop=stop_after_attempt(3), before_sleep=before_sleep_log, reraise=True)
+@retry(retry=retry_if_exception(is_transient_exception), wait=wait_exponential(multiplier=1, min=1, max=12), stop=stop_after_attempt(LLM_RETRY_ATTEMPTS), before_sleep=before_sleep_log, reraise=True)
 async def invoke_structured_chain(payload: Dict[str, Any]) -> Any:
     structured_chain, _, _ = get_chains()
     if structured_chain is None:
         raise OutputParserException("Structured output chain is not available")
     async with LLM_SEMAPHORE:
-        logger.info("LLM structured extraction chunk {chunk}", chunk=payload.get("chunk_index"))
+        logger.info("LLM structured fact extraction chunk {chunk}", chunk=payload.get("chunk_index"))
         return await asyncio.wait_for(structured_chain.ainvoke(payload), timeout=LLM_TIMEOUT_SECONDS)
 
 
-@retry(retry=retry_if_exception(is_transient_exception), wait=wait_exponential(multiplier=1, min=1, max=12), stop=stop_after_attempt(3), before_sleep=before_sleep_log, reraise=True)
-async def invoke_parser_chain(payload: Dict[str, Any]) -> ExtractedFinancialData:
+@retry(retry=retry_if_exception(is_transient_exception), wait=wait_exponential(multiplier=1, min=1, max=12), stop=stop_after_attempt(LLM_RETRY_ATTEMPTS), before_sleep=before_sleep_log, reraise=True)
+async def invoke_parser_chain(payload: Dict[str, Any]) -> ChunkFinancialFacts:
     _, parser_chain, _ = get_chains()
     async with LLM_SEMAPHORE:
-        logger.info("LLM parser extraction chunk {chunk}", chunk=payload.get("chunk_index"))
+        logger.info("LLM parser fact extraction chunk {chunk}", chunk=payload.get("chunk_index"))
         return await asyncio.wait_for(parser_chain.ainvoke(payload), timeout=LLM_TIMEOUT_SECONDS)
 
 
-@retry(retry=retry_if_exception(is_transient_exception), wait=wait_exponential(multiplier=1, min=1, max=12), stop=stop_after_attempt(3), before_sleep=before_sleep_log, reraise=True)
+@retry(retry=retry_if_exception(is_transient_exception), wait=wait_exponential(multiplier=1, min=1, max=12), stop=stop_after_attempt(LLM_RETRY_ATTEMPTS), before_sleep=before_sleep_log, reraise=True)
 async def invoke_raw_chain(payload: Dict[str, Any]) -> str:
     _, _, raw_chain = get_chains()
     async with LLM_SEMAPHORE:
-        logger.info("LLM raw repair extraction chunk {chunk}", chunk=payload.get("chunk_index"))
+        logger.info("LLM raw repair fact extraction chunk {chunk}", chunk=payload.get("chunk_index"))
         response = await asyncio.wait_for(raw_chain.ainvoke(payload), timeout=LLM_TIMEOUT_SECONDS)
     content = getattr(response, "content", response)
     return str(content)
 
 
-def coerce_financial_data(value: Any) -> ExtractedFinancialData:
-    if isinstance(value, ExtractedFinancialData):
+def coerce_chunk_financial_facts(value: Any) -> ChunkFinancialFacts:
+    if isinstance(value, ChunkFinancialFacts):
         return value
-    if isinstance(value, dict):
-        return ExtractedFinancialData.model_validate(value)
+    if isinstance(value, ExtractedFinancialData):
+        return legacy_financial_data_to_facts(value.model_dump(mode="json", exclude_none=True))
     if isinstance(value, str):
         return parse_financial_response_text(value)
-    return ExtractedFinancialData.model_validate(sanitize_for_json(value))
+    sanitized = sanitize_for_json(value)
+    if isinstance(sanitized, list):
+        return ChunkFinancialFacts.model_validate({"metrics": sanitized})
+    if isinstance(sanitized, dict):
+        wrapped = sanitized.get("financial_data") if "financial_data" in sanitized else sanitized.get("data")
+        if isinstance(wrapped, (dict, list)) and not any(key in sanitized for key in ("metrics", "company_info", "company_information")):
+            return coerce_chunk_financial_facts(wrapped)
+        if any(key in sanitized for key in ("metrics", "metric", "company_info", "company_information")):
+            return ChunkFinancialFacts.model_validate(normalize_chunk_fact_payload(sanitized))
+        return legacy_financial_data_to_facts(sanitized)
+    return ChunkFinancialFacts()
 
 
-def parse_financial_response_text(text: str) -> ExtractedFinancialData:
+def normalize_chunk_fact_payload(data: Dict[str, Any]) -> Dict[str, Any]:
+    if "metric" in data and "value" in data:
+        metrics = [data]
+    else:
+        metrics = data.get("metrics") or data.get("financial_metrics") or []
+    if isinstance(metrics, dict):
+        metrics = [metrics]
+    if not isinstance(metrics, list):
+        metrics = []
+    normalized_metrics: List[Any] = []
+    for metric in metrics:
+        if isinstance(metric, dict):
+            converted = metric_from_legacy_value(None, metric)
+            normalized_metrics.append(converted or metric)
+        else:
+            normalized_metrics.append(metric)
+
+    company_info = data.get("company_info") if "company_info" in data else data.get("company_information", [])
+    if isinstance(company_info, dict):
+        company_info = [{"field": key, "value": value} for key, value in company_info.items() if safe_string(value) is not None]
+    elif isinstance(company_info, list):
+        normalized_company_info: List[Any] = []
+        for item in company_info:
+            if isinstance(item, dict) and not ({"field", "value"} <= set(item)):
+                normalized_company_info.extend({"field": key, "value": value} for key, value in item.items() if safe_string(value) is not None)
+            else:
+                normalized_company_info.append(item)
+        company_info = normalized_company_info
+    else:
+        company_info = []
+    return {"metrics": normalized_metrics, "company_info": company_info}
+
+def legacy_financial_data_to_facts(data: Dict[str, Any]) -> ChunkFinancialFacts:
+    metrics: List[Dict[str, Any]] = []
+    company_info: List[Dict[str, Any]] = []
+    for field in SCALAR_FINANCIAL_FIELDS:
+        value = data.get(field)
+        if value not in (None, "") and not isinstance(value, (dict, list)):
+            company_info.append({"field": field, "value": value})
+    for field in METRIC_FINANCIAL_FIELDS:
+        metric = metric_from_legacy_value(field, data.get(field))
+        if metric is not None:
+            metrics.append(metric)
+    for value in data.get("all_financial_values") or data.get("metrics") or []:
+        metric = metric_from_legacy_value(None, value)
+        if metric is not None:
+            metrics.append(metric)
+    return ChunkFinancialFacts.model_validate({"metrics": metrics, "company_info": company_info})
+
+
+def metric_from_legacy_value(field: Optional[str], value: Any) -> Optional[Dict[str, Any]]:
+    if value in (None, ""):
+        return None
+    default_name = METRIC_FIELD_DISPLAY_NAMES.get(field or "", field or "Metric")
+    if isinstance(value, dict):
+        value_text = safe_string(value.get("value") or value.get("raw_value") or value.get("normalized_value"))
+        if value_text is None:
+            return None
+        currency = safe_string(value.get("currency"))
+        scale = safe_string(value.get("scale"))
+        unit = safe_string(value.get("unit")) or safe_string(" ".join(part for part in (currency, scale) if part))
+        metric = {
+            "metric": safe_string(value.get("metric")) or default_name,
+            "value": value_text,
+            "unit": unit,
+            "period": value.get("period"),
+            "page_number": value.get("page_number") or value.get("page"),
+            "confidence": value.get("confidence"),
+        }
+        return {key: item for key, item in metric.items() if item not in (None, "")}
+    value_text = safe_string(value)
+    if value_text is None:
+        return None
+    return {"metric": default_name, "value": value_text}
+
+
+def parse_financial_response_text(text: str) -> ChunkFinancialFacts:
     try:
-        return FINANCIAL_PARSER.parse(text)
+        return FINANCIAL_FACT_PARSER.parse(text)
     except Exception:
-        parsed = parse_json_object_from_text(text)
-        return ExtractedFinancialData.model_validate(parsed)
+        parsed = parse_json_value_from_text(text)
+        return coerce_chunk_financial_facts(parsed)
 
 
-def parse_json_object_from_text(text: str) -> Dict[str, Any]:
-    cleaned = text.strip()
+def parse_json_value_from_text(text: str) -> Any:
+    cleaned = str(text or "").strip()
     cleaned = re.sub(r"^```(?:json)?\s*", "", cleaned, flags=re.IGNORECASE)
     cleaned = re.sub(r"\s*```$", "", cleaned)
-    try:
-        parsed = JSON_OUTPUT_PARSER.parse(cleaned)
-        if isinstance(parsed, dict):
-            return parsed
-    except Exception:
-        cleaned = cleaned
-    start = cleaned.find("{")
-    end = cleaned.rfind("}")
-    if start >= 0 and end > start:
-        cleaned = cleaned[start : end + 1]
     repaired = cleaned.replace("\u201c", '"').replace("\u201d", '"').replace("\u2019", "'")
     repaired = re.sub(r",\s*([}\]])", r"\1", repaired)
     repaired = re.sub(r"\bNaN\b|\bInfinity\b|-Infinity", "null", repaired)
-    try:
-        parsed = orjson.loads(repaired)
-        if isinstance(parsed, dict):
-            return parsed
-    except Exception:
-        parsed = json.loads(repaired)
-        if isinstance(parsed, dict):
-            return parsed
-    raise ValueError("LLM response could not be repaired into a JSON object")
+    for candidate in (cleaned, repaired):
+        try:
+            return JSON_OUTPUT_PARSER.parse(candidate)
+        except Exception:
+            pass
+        try:
+            return orjson.loads(candidate)
+        except Exception:
+            pass
+        decoder = json.JSONDecoder()
+        for index, char in enumerate(candidate):
+            if char not in "[{":
+                continue
+            try:
+                parsed, _ = decoder.raw_decode(candidate[index:])
+                return parsed
+            except Exception:
+                continue
+    raise ValueError("LLM response could not be repaired into JSON")
+
+
+def parse_json_object_from_text(text: str) -> Dict[str, Any]:
+    parsed = parse_json_value_from_text(text)
+    if isinstance(parsed, dict):
+        return parsed
+    raise ValueError("LLM response did not contain a JSON object")
+
+
+def compact_exception_message(exc: BaseException, max_length: int = 260) -> str:
+    message = re.sub(r"\s+", " ", str(exc)).strip()
+    message = re.sub(r"'failed_generation':\s*'.*", "'failed_generation': '<omitted>'}", message)
+    if len(message) > max_length:
+        return message[: max_length - 3].rstrip() + "..."
+    return message
+
+
+def is_llm_connection_failure(exc: BaseException) -> bool:
+    text = str(exc).lower()
+    return any(token in text for token in ("connection error", "connecterror", "all connection attempts failed", "apiconnectionerror"))
+
+
+def local_fallback_chunk_result(chunk: Dict[str, Any], reason: BaseException, *, error_if_empty: bool = True) -> Dict[str, Any]:
+    facts = extract_financial_facts_locally(chunk.get("text", ""))
+    chunk_index = chunk.get("index", 1)
+    return {
+        "chunk_index": chunk_index,
+        "data": dump_chunk_facts(facts) if facts.metrics or facts.company_info else empty_chunk_financial_facts(),
+        "errors": [],
+        "warnings": [],
+    }
+
+
+def extract_financial_facts_locally(text: str) -> ChunkFinancialFacts:
+    metrics: List[Dict[str, Any]] = []
+    company_info: List[Dict[str, Any]] = []
+    current_page: Optional[Union[int, str]] = None
+    for raw_line in (text or "").splitlines():
+        line = re.sub(r"\s+", " ", raw_line).strip() if "\t" not in raw_line else raw_line.strip()
+        if not line:
+            continue
+        page_match = re.search(r"\b(?:page|ocr page)\s+(\d+)\b", line, flags=re.IGNORECASE)
+        if page_match:
+            current_page = int(page_match.group(1))
+        company_name = normalize_company_name_text(line)
+        if company_name:
+            company_info.append(build_local_company_fact("company_name", company_name, current_page))
+            continue
+        metrics.extend(extract_local_metrics_from_line(line, current_page))
+        company_info.extend(extract_local_company_info_from_line(line, current_page))
+    return ChunkFinancialFacts.model_validate({
+        "metrics": dedupe_simple_facts(metrics, ("metric", "value", "period", "page_number")),
+        "company_info": dedupe_simple_facts(company_info, ("field", "value", "page_number")),
+    })
+
+
+def extract_local_metrics_from_line(line: str, page_number: Optional[Union[int, str]]) -> List[Dict[str, Any]]:
+    facts: List[Dict[str, Any]] = []
+    cells = [cell.strip() for cell in line.split("\t") if cell.strip()]
+    if len(cells) >= 2:
+        field = metric_field_for_label(cells[0])
+        if field is not None:
+            period_context = detect_period_from_text(line)
+            for cell in cells[1:]:
+                if looks_like_financial_value(cell):
+                    facts.append(build_local_metric_fact(field, cell, page_number, period_context))
+            if facts:
+                return facts
+    for field, aliases in METRIC_FIELD_ALIASES.items():
+        for alias in sorted(aliases, key=len, reverse=True):
+            remainder = value_after_label_prefix(line, alias)
+            if remainder is not None and looks_like_financial_value(remainder):
+                facts.append(build_local_metric_fact(field, clean_extracted_value(remainder), page_number, detect_period_from_text(line)))
+                return facts
+            narrative_value = value_after_narrative_label(line, alias)
+            if narrative_value is not None:
+                facts.append(build_local_metric_fact(field, narrative_value, page_number, detect_period_from_text(line)))
+                return facts
+    return facts
+
+
+def extract_local_company_info_from_line(line: str, page_number: Optional[Union[int, str]]) -> List[Dict[str, Any]]:
+    facts: List[Dict[str, Any]] = []
+    cells = [cell.strip() for cell in line.split("\t") if cell.strip()]
+    if len(cells) >= 2:
+        field = company_field_for_label(cells[0])
+        if field is not None:
+            facts.append(build_local_company_fact(field, cells[1], page_number))
+            return facts
+    for field, aliases in COMPANY_INFO_FIELD_ALIASES.items():
+        for alias in sorted(aliases, key=len, reverse=True):
+            remainder = value_after_label_prefix(line, alias)
+            if remainder is not None:
+                value = clean_extracted_value(remainder)
+                if value:
+                    facts.append(build_local_company_fact(field, value, page_number))
+                    return facts
+    return facts
+
+
+def value_after_label_prefix(line: str, alias: str) -> Optional[str]:
+    pattern = rf"^\s*{re.escape(alias)}\s*(?:[:=\-??]|\s{{2,}}|\t)\s*(?P<value>.+?)\s*$"
+    match = re.match(pattern, line, flags=re.IGNORECASE)
+    if match:
+        return match.group("value")
+    loose_pattern = rf"^\s*{re.escape(alias)}\s+(?P<value>.+?)\s*$"
+    loose_match = re.match(loose_pattern, line, flags=re.IGNORECASE)
+    if loose_match and starts_with_financial_value(loose_match.group("value")):
+        return loose_match.group("value")
+    return None
+
+
+def value_after_narrative_label(line: str, alias: str) -> Optional[str]:
+    value_pattern = r"(?:[$????]\s*)?\(?[-+]?\d[\d,]*(?:\.\d+)?\)?\s*(?:%|x|times|thousand|million|billion|trillion|crore|crores|cr|lakh|lakhs|k|m|bn|b|shares?)?|(?:USD|EUR|GBP|INR|CAD|AUD|JPY|CNY|CHF|SGD|HKD|AED)\s+\(?[-+]?\d[\d,]*(?:\.\d+)?\)?\s*(?:thousand|million|billion|trillion|crore|crores|cr|lakh|lakhs|k|m|bn|b)?"
+    pattern = rf"\b{re.escape(alias)}\b\s+(?:was|were|is|are|totaled|totalled|amounted to|of|at)\s+(?P<value>{value_pattern})"
+    match = re.search(pattern, line, flags=re.IGNORECASE)
+    return clean_extracted_value(match.group("value")) if match else None
+
+
+def looks_like_financial_value(value: Any) -> bool:
+    text = safe_string(value) or ""
+    return bool(re.search(r"(?i)(?:USD|EUR|GBP|INR|CAD|AUD|JPY|[$????])?\s*\(?[-+]?\d[\d,]*(?:\.\d+)?\)?\s*(?:%|x|times|thousand|million|billion|trillion|crore|crores|cr|lakh|lakhs|k|m|bn|b|shares?)?", text))
+
+
+def starts_with_financial_value(value: Any) -> bool:
+    text = safe_string(value) or ""
+    return bool(re.match(r"(?i)^(?:USD|EUR|GBP|INR|CAD|AUD|JPY|[$????])?\s*\(?[-+]?\d", text))
+
+
+def clean_extracted_value(value: Any) -> str:
+    text = safe_string(value) or ""
+    text = re.sub(r"\s+", " ", text).strip(" ;,.?")
+    return text
+
+
+def detect_period_from_text(text: str) -> Optional[str]:
+    match = re.search(r"\b(?:FY\s*)?20\d{2}\b|\bQ[1-4]\s*20\d{2}\b|\b(?:quarter|year)\s+ended\s+[A-Za-z]+\s+\d{1,2},?\s+20\d{2}\b", text, flags=re.IGNORECASE)
+    return match.group(0) if match else None
+
+
+def extract_unit_from_value(value: str) -> Optional[str]:
+    units: List[str] = []
+    currency_match = re.search(r"(?i)\b(?:USD|EUR|GBP|INR|CAD|AUD|JPY|CNY|CHF|SGD|HKD|AED)\b|[$????]", value)
+    if currency_match:
+        units.append(CURRENCY_SYMBOLS.get(currency_match.group(0), currency_match.group(0).upper()))
+    scale_match = re.search(r"(?i)\b(?:thousand|million|billion|trillion|crore|crores|cr|lakh|lakhs|k|m|bn|b)\b", value)
+    if scale_match:
+        units.append(scale_match.group(0).lower())
+    if "%" in value:
+        units.append("percent")
+    if re.search(r"(?i)\bshares?\b", value):
+        units.append("shares")
+    return " ".join(dict.fromkeys(units)) or None
+
+
+def build_local_metric_fact(field: str, value: str, page_number: Optional[Union[int, str]], period: Optional[str]) -> Dict[str, Any]:
+    fact = {
+        "metric": METRIC_FIELD_DISPLAY_NAMES.get(field, field),
+        "value": value,
+        "unit": extract_unit_from_value(value),
+        "period": period,
+        "page_number": page_number,
+        "confidence": LOCAL_FALLBACK_CONFIDENCE,
+    }
+    return {key: item for key, item in fact.items() if item not in (None, "")}
+
+
+def build_local_company_fact(field: str, value: str, page_number: Optional[Union[int, str]]) -> Dict[str, Any]:
+    fact = {"field": field, "value": value, "page_number": page_number, "confidence": DEFAULT_COMPANY_INFO_CONFIDENCE}
+    return {key: item for key, item in fact.items() if item not in (None, "")}
+
+
+def dedupe_simple_facts(values: List[Dict[str, Any]], keys: Tuple[str, ...]) -> List[Dict[str, Any]]:
+    deduped: List[Dict[str, Any]] = []
+    signatures: set[str] = set()
+    for value in values:
+        signature = "|".join(str(value.get(key) or "").strip().lower() for key in keys)
+        if not signature or signature in signatures:
+            continue
+        signatures.add(signature)
+        deduped.append(value)
+    return deduped
 
 
 async def extract_financial_chunk(chunk: Dict[str, Any], metadata: Dict[str, Any]) -> Dict[str, Any]:
+    _ = metadata
     payload = {
         "chunk_index": chunk.get("index", 1),
         "chunk_count": chunk.get("total", 1),
         "document_text": chunk.get("text", ""),
-        "known_metadata": orjson.dumps(sanitize_for_json(metadata)).decode("utf-8"),
     }
-    try:
-        structured = await invoke_structured_chain(payload)
-        data = coerce_financial_data(structured)
-        return {"chunk_index": chunk.get("index", 1), "data": data.model_dump(mode="json"), "errors": []}
-    except Exception as structured_exc:
-        logger.warning("Structured extraction fallback for chunk {chunk}: {error}", chunk=chunk.get("index"), error=str(structured_exc))
+    primary_error: Optional[BaseException] = None
+    if LLM_STRUCTURED_OUTPUT_ENABLED:
+        try:
+            structured = await invoke_structured_chain(payload)
+            data = coerce_chunk_financial_facts(structured)
+            return {"chunk_index": chunk.get("index", 1), "data": dump_chunk_facts(data), "errors": [], "warnings": []}
+        except Exception as structured_exc:
+            primary_error = structured_exc
+            logger.warning("Structured fact extraction failed for chunk {chunk}: {error}", chunk=chunk.get("index"), error=compact_exception_message(structured_exc))
+            if is_llm_connection_failure(structured_exc) or not LLM_PARSER_FALLBACK_ENABLED:
+                return local_fallback_chunk_result(chunk, structured_exc)
     try:
         parsed = await invoke_parser_chain(payload)
-        data = coerce_financial_data(parsed)
-        return {"chunk_index": chunk.get("index", 1), "data": data.model_dump(mode="json"), "errors": []}
+        data = coerce_chunk_financial_facts(parsed)
+        return {"chunk_index": chunk.get("index", 1), "data": dump_chunk_facts(data), "errors": [], "warnings": []}
     except OutputParserException as parser_exc:
-        logger.warning("Parser extraction repair fallback for chunk {chunk}: {error}", chunk=chunk.get("index"), error=str(parser_exc))
-        raw = await invoke_raw_chain(payload)
-        data = parse_financial_response_text(raw)
-        return {"chunk_index": chunk.get("index", 1), "data": data.model_dump(mode="json"), "errors": []}
+        primary_error = parser_exc
+        logger.warning("Parser fact extraction failed for chunk {chunk}: {error}", chunk=chunk.get("index"), error=compact_exception_message(parser_exc))
+        if not LLM_RAW_REPAIR_ENABLED:
+            return local_fallback_chunk_result(chunk, parser_exc)
+        try:
+            raw = await invoke_raw_chain(payload)
+            data = parse_financial_response_text(raw)
+            return {"chunk_index": chunk.get("index", 1), "data": dump_chunk_facts(data), "errors": [], "warnings": []}
+        except Exception as raw_exc:
+            logger.warning("Raw fact extraction repair failed for chunk {chunk}: {error}", chunk=chunk.get("index"), error=compact_exception_message(raw_exc))
+            return local_fallback_chunk_result(chunk, raw_exc)
     except Exception as exc:
-        logger.exception("LLM extraction failed for chunk {chunk}", chunk=chunk.get("index"))
-        return {"chunk_index": chunk.get("index", 1), "data": empty_financial_data(), "errors": [str(exc)]}
-
+        primary_error = exc
+        logger.exception("LLM fact extraction failed for chunk {chunk}", chunk=chunk.get("index"))
+        return local_fallback_chunk_result(chunk, exc)
+    return local_fallback_chunk_result(chunk, primary_error or RuntimeError("LLM extraction failed"))
 
 def merge_chunk_financial_results(results: List[Dict[str, Any]]) -> Dict[str, Any]:
-    models: List[Dict[str, Any]] = []
+    facts_by_chunk: List[Tuple[int, ChunkFinancialFacts]] = []
     for result in sorted(results, key=lambda item: item.get("chunk_index", 0)):
-        data = result.get("data")
-        if isinstance(data, dict):
-            try:
-                models.append(ExtractedFinancialData.model_validate(data).model_dump(mode="json"))
-            except ValidationError:
-                continue
+        try:
+            facts = coerce_chunk_financial_facts(result.get("data") or empty_chunk_financial_facts())
+            facts_by_chunk.append((int(result.get("chunk_index") or 0), facts))
+        except ValidationError:
+            continue
     merged = empty_financial_data()
-    for field in SCALAR_FINANCIAL_FIELDS:
-        candidates: List[Tuple[Any, float]] = []
-        for model in models:
-            value = model.get(field)
-            if value not in (None, ""):
-                candidates.append((value, clamp_float(model.get("confidence_score"), 0.0, 1.0)))
+    scalar_candidates: Dict[str, List[Tuple[Any, float]]] = {field: [] for field in SCALAR_FINANCIAL_FIELDS}
+    metric_candidates: Dict[str, List[Dict[str, Any]]] = {field: [] for field in METRIC_FINANCIAL_FIELDS}
+    all_values: List[Dict[str, Any]] = []
+    confidence_values: List[float] = []
+
+    for _, facts in facts_by_chunk:
+        for fact_model in facts.company_info:
+            normalized = normalize_company_info_fact(fact_model.model_dump(mode="json", exclude_none=True))
+            if normalized is None:
+                continue
+            field, value, confidence = normalized
+            scalar_candidates.setdefault(field, []).append((value, confidence))
+            if confidence > 0:
+                confidence_values.append(confidence)
+        for metric_model in facts.metrics:
+            metric = normalize_metric_fact(metric_model.model_dump(mode="json", exclude_none=True))
+            if metric is None:
+                continue
+            all_values.append(metric)
+            field = metric_field_for_label(metric.get("metric"))
+            if field in metric_candidates:
+                metric_candidates[field].append(metric)
+            confidence = metric.get("confidence")
+            if confidence is not None:
+                confidence_values.append(clamp_float(confidence, 0.0, 1.0))
+
+    for field, candidates in scalar_candidates.items():
         chosen = choose_scalar_candidate(candidates)
         if chosen is not None:
             merged[field] = chosen
-    all_values: List[Dict[str, Any]] = []
-    for field in METRIC_FINANCIAL_FIELDS:
-        candidates = []
-        for model in models:
-            value = model.get(field)
-            if isinstance(value, dict) and has_metric_value(value):
-                candidates.append(value)
+    company_info = {field: merged[field] for field in SCALAR_FINANCIAL_FIELDS if merged.get(field) not in (None, "")}
+    if company_info:
+        merged["company_info"] = company_info
+
+    deduped_values = dedupe_metric_values(all_values)
+    for field, candidates in metric_candidates.items():
         chosen_metric = choose_metric_candidate(candidates, field)
         if chosen_metric is not None:
             merged[field] = chosen_metric
-            all_values.append(chosen_metric)
-    for model in models:
-        for value in model.get("all_financial_values") or []:
-            if isinstance(value, dict) and has_metric_value(value):
-                all_values.append(value)
-    merged["all_financial_values"] = dedupe_metric_values(all_values)
-    confidences = [clamp_float(model.get("confidence_score"), 0.0, 1.0) for model in models if model.get("confidence_score") is not None]
-    if confidences:
-        merged["confidence_score"] = round(sum(confidences) / len(confidences), 4)
-    return ExtractedFinancialData.model_validate(merged).model_dump(mode="json")
+    merged["metrics"] = deduped_values
+    merged["all_financial_values"] = deduped_values
+    if confidence_values:
+        merged["confidence_score"] = round(sum(confidence_values) / len(confidence_values), 4)
+    return dump_financial_data(ExtractedFinancialData.model_validate(merged))
+
+
+def label_key(value: Any) -> str:
+    text = safe_string(value) or ""
+    text = re.sub(r"[^a-z0-9]+", " ", text.lower())
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def metric_field_for_label(label: Any) -> Optional[str]:
+    key = label_key(label)
+    if not key:
+        return None
+    for field, aliases in METRIC_FIELD_ALIASES.items():
+        if key == label_key(field) or key in {label_key(alias) for alias in aliases}:
+            return field
+    return None
+
+
+def company_field_for_label(label: Any) -> Optional[str]:
+    key = label_key(label)
+    if not key:
+        return None
+    for field, aliases in COMPANY_INFO_FIELD_ALIASES.items():
+        if key == label_key(field) or key in {label_key(alias) for alias in aliases}:
+            return field
+    return None
+
+
+def canonical_metric_display(label: Any) -> str:
+    field = metric_field_for_label(label)
+    if field is not None:
+        return METRIC_FIELD_DISPLAY_NAMES[field]
+    words = label_key(label).split()
+    acronyms = {"ebit", "ebitda", "eps", "roa", "roe", "pat"}
+    return " ".join(word.upper() if word in acronyms else word.capitalize() for word in words) or "Metric"
+
+
+def normalize_metric_fact(value: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    try:
+        metric = Metric.model_validate(value).model_dump(mode="json", exclude_none=True)
+    except ValidationError:
+        return None
+    metric["metric"] = canonical_metric_display(metric.get("metric"))
+    if metric.get("confidence") is None:
+        metric["confidence"] = DEFAULT_METRIC_CONFIDENCE
+    if metric.get("raw_value") == metric.get("value"):
+        metric.pop("raw_value", None)
+    return FinancialMetricValue.model_validate(metric).model_dump(mode="json", exclude_none=True)
+
+
+def normalize_company_info_fact(value: Dict[str, Any]) -> Optional[Tuple[str, str, float]]:
+    try:
+        fact = CompanyInfoFact.model_validate(value).model_dump(mode="json", exclude_none=True)
+    except ValidationError:
+        return None
+    field = company_field_for_label(fact.get("field"))
+    if field is None:
+        return None
+    confidence = clamp_float(fact.get("confidence"), 0.0, 1.0) if fact.get("confidence") is not None else DEFAULT_COMPANY_INFO_CONFIDENCE
+    return field, fact["value"], confidence
 
 
 def choose_scalar_candidate(candidates: List[Tuple[Any, float]]) -> Any:
@@ -1408,12 +2259,12 @@ def choose_metric_candidate(candidates: List[Dict[str, Any]], field: str) -> Opt
     enriched = []
     for candidate in candidates:
         metric = dict(candidate)
-        metric["metric"] = metric.get("metric") or field
-        confidence = clamp_float(metric.get("confidence"), 0.0, 1.0)
-        completeness = sum(1 for key in ("value", "raw_value", "currency", "period", "source_text") if metric.get(key) not in (None, ""))
-        enriched.append((confidence, completeness, len(str(metric.get("source_text") or "")), metric))
+        metric["metric"] = metric.get("metric") or METRIC_FIELD_DISPLAY_NAMES.get(field, field)
+        confidence = clamp_float(metric.get("confidence"), 0.0, 1.0) if metric.get("confidence") is not None else 0.0
+        completeness = sum(1 for key in ("value", "unit", "period", "page_number") if metric.get(key) not in (None, ""))
+        enriched.append((confidence, completeness, len(str(metric.get("value") or "")), metric))
     enriched.sort(key=lambda item: (item[0], item[1], item[2]), reverse=True)
-    return FinancialMetricValue.model_validate(enriched[0][3]).model_dump(mode="json")
+    return FinancialMetricValue.model_validate(enriched[0][3]).model_dump(mode="json", exclude_none=True)
 
 
 def has_metric_value(value: Dict[str, Any]) -> bool:
@@ -1425,29 +2276,51 @@ def dedupe_metric_values(values: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     signatures: List[str] = []
     for value in values:
         try:
-            metric = FinancialMetricValue.model_validate(value).model_dump(mode="json")
+            metric = FinancialMetricValue.model_validate(value).model_dump(mode="json", exclude_none=True)
         except ValidationError:
             continue
-        signature = " ".join(str(metric.get(key) or "") for key in ("metric", "raw_value", "value", "currency", "period")).strip().lower()
+        signature = " ".join(str(metric.get(key) or "") for key in ("metric", "value", "unit", "period", "page_number")).strip().lower()
         if not signature:
             continue
         if any(fuzz.ratio(signature, existing) >= 96 for existing in signatures):
             continue
         signatures.append(signature)
         deduped.append(metric)
+    deduped.sort(key=lambda item: (metric_sort_index(item.get("metric")), str(item.get("period") or ""), str(item.get("page_number") or ""), str(item.get("metric") or "")))
     return deduped
 
+
+def metric_sort_index(label: Any) -> int:
+    field = metric_field_for_label(label)
+    if field in METRIC_FINANCIAL_FIELDS:
+        return METRIC_FINANCIAL_FIELDS.index(field)
+    return len(METRIC_FINANCIAL_FIELDS)
 
 def calculate_confidence(state: ExtractionState) -> float:
     financial_data = state.get("financial_data") or {}
     metric_confidences: List[float] = []
     extracted_count = 0
-    for field in METRIC_FINANCIAL_FIELDS:
-        value = financial_data.get(field)
-        if isinstance(value, dict) and has_metric_value(value):
-            extracted_count += 1
+    seen_signatures: set[str] = set()
+
+    def add_metric_confidence(value: Dict[str, Any]) -> None:
+        nonlocal extracted_count
+        if not isinstance(value, dict) or not has_metric_value(value):
+            return
+        signature = " ".join(str(value.get(key) or "") for key in ("metric", "value", "unit", "period")).lower()
+        if signature in seen_signatures:
+            return
+        seen_signatures.add(signature)
+        extracted_count += 1
+        if value.get("confidence") is not None:
             metric_confidences.append(clamp_float(value.get("confidence"), 0.0, 1.0))
-    scalar_count = sum(1 for field in SCALAR_FINANCIAL_FIELDS if financial_data.get(field) not in (None, ""))
+
+    for value in financial_data.get("metrics") or financial_data.get("all_financial_values") or []:
+        add_metric_confidence(value)
+    for field in METRIC_FINANCIAL_FIELDS:
+        add_metric_confidence(financial_data.get(field))
+
+    company_info = financial_data.get("company_info") if isinstance(financial_data.get("company_info"), dict) else {}
+    scalar_count = len(company_info) or sum(1 for field in SCALAR_FINANCIAL_FIELDS if financial_data.get(field) not in (None, ""))
     llm_confidence = clamp_float(financial_data.get("confidence_score"), 0.0, 1.0)
     if metric_confidences:
         llm_confidence = max(llm_confidence, sum(metric_confidences) / len(metric_confidences))
@@ -1456,10 +2329,14 @@ def calculate_confidence(state: ExtractionState) -> float:
         text_quality = max(text_quality, 0.85)
     if state.get("ocr_required") and state.get("metadata", {}).get("ocr_average_confidence") is not None:
         text_quality = max(text_quality, clamp_float(state.get("metadata", {}).get("ocr_average_confidence"), 0.0, 1.0))
-    extraction_density = clamp_float((extracted_count + scalar_count) / 14, 0.0, 1.0)
+    extraction_density = clamp_float((extracted_count + scalar_count) / 18, 0.0, 1.0)
+    coverage_floor = clamp_float(extracted_count / 4, 0.0, 1.0) if extracted_count else 0.0
     error_penalty = min(0.5, len(state.get("errors", [])) * 0.14)
-    warning_penalty = min(0.25, len(state.get("warnings", [])) * 0.035)
-    confidence = (0.52 * llm_confidence) + (0.28 * text_quality) + (0.20 * extraction_density) - error_penalty - warning_penalty
+    penalized_warnings = [warning for warning in state.get("warnings", []) if "deterministic explicit-fact fallback" not in warning.lower()]
+    warning_penalty = min(0.25, len(penalized_warnings) * 0.035)
+    conservative_confidence = (0.52 * llm_confidence) + (0.28 * text_quality) + (0.20 * extraction_density)
+    explicit_fact_confidence = (0.82 * llm_confidence) + (0.13 * text_quality) + (0.05 * coverage_floor)
+    confidence = max(conservative_confidence, explicit_fact_confidence) - error_penalty - warning_penalty
     return round(clamp_float(confidence, 0.0, 1.0) * 100, 2)
 
 async def validate_file_node(state: ExtractionState) -> ExtractionState:
@@ -1741,15 +2618,25 @@ async def financial_extraction_node(state: ExtractionState) -> ExtractionState:
         state["chunk_results"] = []
         state["financial_data"] = empty_financial_data()
         return state
-    tasks = [extract_financial_chunk(chunk, state.get("metadata", {})) for chunk in chunks]
-    results = await asyncio.gather(*tasks, return_exceptions=True)
+    llm_chunks, budget_local_chunks, budget_stats, budget_warnings = budget_chunks_for_llm(chunks)
+    state["metadata"]["llm_budget"] = budget_stats
+    for warning in budget_warnings:
+        add_warning(state, warning)
+    tasks = [extract_financial_chunk(chunk, state.get("metadata", {})) for chunk in llm_chunks]
+    results = await asyncio.gather(*tasks, return_exceptions=True) if tasks else []
+    results.extend(
+        local_fallback_chunk_result(chunk, RuntimeError(reason), error_if_empty=False)
+        for chunk, reason in budget_local_chunks
+    )
     chunk_results: List[Dict[str, Any]] = []
     for index, result in enumerate(results):
         if isinstance(result, Exception):
             add_error(state, f"Financial extraction failed for chunk {index + 1}: {str(result)}")
-            chunk_results.append({"chunk_index": index + 1, "data": empty_financial_data(), "errors": [str(result)]})
+            chunk_results.append({"chunk_index": index + 1, "data": empty_chunk_financial_facts(), "errors": [str(result)]})
         else:
             chunk_results.append(result)
+            for warning in result.get("warnings", []):
+                add_warning(state, f"Financial extraction chunk {result.get('chunk_index')}: {warning}")
             for error in result.get("errors", []):
                 add_error(state, f"Financial extraction chunk {result.get('chunk_index')}: {error}")
     state["chunk_results"] = chunk_results
@@ -1760,7 +2647,8 @@ async def merge_chunk_results_node(state: ExtractionState) -> ExtractionState:
     state = ensure_state_defaults(dict(state))
     logger.info("LangGraph node Merge Chunk Results")
     try:
-        state["financial_data"] = merge_chunk_financial_results(state.get("chunk_results", []))
+        merged_data = merge_chunk_financial_results(state.get("chunk_results", []))
+        state["financial_data"] = augment_financial_data_with_context(merged_data, state.get("metadata", {}), state.get("merged_text", ""))
     except Exception as exc:
         add_error(state, f"Failed to merge financial extraction results: {str(exc)}")
         state["financial_data"] = empty_financial_data()
@@ -1772,7 +2660,7 @@ async def validate_json_node(state: ExtractionState) -> ExtractionState:
     logger.info("LangGraph node Validate JSON")
     try:
         validated = ExtractedFinancialData.model_validate(state.get("financial_data") or {})
-        state["financial_data"] = validated.model_dump(mode="json")
+        state["financial_data"] = dump_financial_data(validated)
     except ValidationError as exc:
         add_error(state, f"Invalid financial JSON after extraction: {str(exc)}")
         state["financial_data"] = empty_financial_data()
@@ -1786,27 +2674,32 @@ async def confidence_calculation_node(state: ExtractionState) -> ExtractionState
     state["confidence_score"] = confidence
     financial_data = dict(state.get("financial_data") or empty_financial_data())
     financial_data["confidence_score"] = round(clamp_float(confidence / 100, 0.0, 1.0), 4)
-    state["financial_data"] = ExtractedFinancialData.model_validate(financial_data).model_dump(mode="json")
+    state["financial_data"] = dump_financial_data(ExtractedFinancialData.model_validate(financial_data))
     return state
 
 async def response_formatter_node(state: ExtractionState) -> ExtractionState:
     state = ensure_state_defaults(dict(state))
     logger.info("LangGraph node Response Formatter")
     state["execution_time"] = round(time.perf_counter() - state.get("start_time", time.perf_counter()), 4)
+    internal_error_markers = ("financial extraction chunk", "failed to parse chunkfinancialfacts", "groq llm unavailable or skipped")
+    internal_warning_markers = ("compacted for groq token budget", "deterministic explicit-fact fallback", "chunk(s) skipped groq", "financial extraction chunk")
+    public_errors = [error for error in state.get("errors", []) if not any(marker in str(error).lower() for marker in internal_error_markers)]
+    public_warnings = [warning for warning in state.get("warnings", []) if not any(marker in str(warning).lower() for marker in internal_warning_markers)]
     status_code = status_code_for_state(state)
+    if not public_errors and status_code in {500, 502}:
+        status_code = 200
     state["status_code"] = status_code
     response = {
-        "success": status_code < 400 and not state.get("errors"),
+        "success": status_code < 400 and not public_errors,
         "filename": state.get("filename", ""),
         "filetype": state.get("extension", "").replace(".", ""),
         "pages": int(state.get("page_count") or 0),
         "ocr_used": bool(state.get("ocr_required")),
         "processing_time": state["execution_time"],
-        "metadata": sanitize_for_json(state.get("metadata", {})),
         "financial_data": sanitize_for_json(state.get("financial_data", empty_financial_data())),
         "confidence_score": state.get("confidence_score", 0.0),
-        "errors": state.get("errors", []),
-        "warnings": state.get("warnings", []),
+        "errors": public_errors,
+        "warnings": public_warnings,
     }
     state["response"] = response
     logger.info("Execution time {seconds}s for {filename}", seconds=state["execution_time"], filename=state.get("filename"))
@@ -2134,8 +3027,11 @@ if __name__ == "__main__":
 
     uvicorn.run(
         app,
-        host="0.0.0.0",
-        port=8000,
+        host=os.getenv("EXTRACTION_AGENT_HOST", "127.0.0.2"),
+        port=int(os.getenv("EXTRACTION_AGENT_PORT", "8001")),
         reload=False,
         log_level="info"
     )
+
+
+
