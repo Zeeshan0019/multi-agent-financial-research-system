@@ -1,0 +1,20 @@
+# --- Orchestrator API layer ---
+fastapi==0.136.1
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+pydantic==2.10.4
+pydantic-settings==2.7.0
+python-dotenv==1.0.1
+
+# --- Persistence ---
+SQLAlchemy==2.0.36
+
+# --- Calling the Extraction Agent / Red Flag Agent microservices, and Groq ---
+httpx==0.28.1
+
+# --- Report Agent (PDF generation) ---
+reportlab==4.2.5
+
+# --- Document Agent is imported in-process; it needs its own dependencies too. ---
+# Install those from backend/requirements.txt (repo root) alongside this file:
+#   pip install -r ../../requirements.txt -r requirements.txt

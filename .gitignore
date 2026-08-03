@@ -1,0 +1,22 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Environment files with secrets
+.env
+
+# Orchestrator local data (db, uploads, vector index, generated reports)
+backend/orchestrator/data/
+
+# Extraction agent working dir
+backend/Extraction agent/work/
+
+# Node / frontend
+node_modules/
+dist/
+.vite/
+
+# OS junk
+.DS_Store
+Thumbs.db
