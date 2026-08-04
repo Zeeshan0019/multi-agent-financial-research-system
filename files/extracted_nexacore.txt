@@ -1,0 +1,597 @@
+=== PAGE 1 ===
+NEXACORE TECHNOLOGIES LIMITED 
+Annual Report and Financial Statements 
+For the Financial Year Ended March 31, 2025 
+NexaCore Technologies Limited | CIN: L72200TG1994PLC018823 | BSE: 507814 | NSE: NEXACORE 
+Registered Office: Plot No. 47, HITEC City, Hyderabad – 500 081 | www.nexacoretech.com 
+CEO & MD: Mr. Rajeev Khanna | CFO: Ms. Priya Nambiar | Chairman: Mr. Arvind Subramaniam 
+Auditor: S.R. Khandelwal & Associates LLP | Board Approval: April 17, 2025 | AGM: July 14, 2025 
+Board: 8 Directors | Independent: 62.5% | Women: 37.5% | Meetings FY2025: 6 
+BOARD OF DIRECTORS 
+Name Designation Category 
+Mr. Arvind Subramaniam Chairman Non-Executive Independent 
+Mr. Rajeev Khanna CEO & Managing Director Executive 
+Ms. Priya Nambiar Executive Director & CFO Executive 
+Mr. Vikram Shenoy Director Non-Executive Non-Independent (Promoter Nominee) 
+Ms. Deepa Krishnamurthy Director Independent 
+Mr. Suresh Balakrishnan Director Independent 
+Mr. Oliver Hartmann Director Independent 
+Ms. Yamini Rao Director Independent 
+Board Composition: 8 Directors | Independent Directors: 62.5% | Women Directors: 37.5% | Board Meetings Held 
+in FY2025: 6 
+ 
+SECTION 1: CORPORATE OVERVIEW AND BUSINESS DESCRIPTION 
+NexaCore Technologies Limited is an Indian multinational information technology services and consulting 
+corporation incorporated on September 14, 1994. Headquartered in Hyderabad, Telangana, the Company operates 
+across 42 countries and serves clients in 58 nations across Banking and Financial Services, Manufacturing, Retail, 
+Communication, Life Sciences, and Energy verticals. As of March 31, 2025, NexaCore employed 1,91,204 people 
+globally and reported consolidated revenue of ₹98,450 crore, making it one of India's largest IT services companies 
+by revenue. 
+The Company operates through five primary service lines: Application Development and Maintenance, which 
+contributed 34.2% of consolidated revenue in FY2025; Cloud Infrastructure and Managed Services at 23.1%; AI 
+and Data Analytics through its proprietary ARIA platform at 11.3%; Business Process Management at 10.0%; and 
+Engineering and Product Development Services at 10.6%. The remaining 10.8% comprises other services and 
+unallocated revenue. 
+Service Line Revenue Performance: 
+Service Line FY2025 (₹ cr)  FY2024 (₹ cr) YoY Growth CC Growth 
+Application Development & Maintenance 33,690 33,154 +1.6% -0.1% 
+Cloud Infrastructure & Managed Services 22,743 19,207 +18.4% +16.2% 
+AI & Data Analytics (ARIA Platform) 11,125 7,810 +42.4% +41.2% 
+=== PAGE 2 ===
+Service Line FY2025 (₹ cr)  FY2024 (₹ cr) YoY Growth CC Growth 
+Business Process Management 9,845 10,160 -3.1% -4.8% 
+Engineering & Product Development 10,432 9,732 +7.2% +5.9% 
+Others / Unallocated 10,615 11,694 -9.2% -10.1% 
+Total Revenue 98,450 91,757 +7.3% +5.1% 
+ Geographic Revenue Distribution: 
+Geography FY2025 (₹ cr) FY2024 (₹ cr) YoY % % of Revenue 
+North America 55,133 51,383 +7.3%  56.0% 
+Europe 22,634 20,686 +9.4%  23.0% 
+Asia Pacific 9,943 9,360 +6.2%  10.1% 
+India (Domestic) 7,882 7,710 +2.2%  8.0% 
+Rest of World 2,858 2,618 +9.2%  2.9% 
+Total 98,450 91,757 +7.3% 100.0% 
+ Group Structure — Key Subsidiaries: 
+Subsidiary Country  Ownership Revenue FY2025 PAT FY2025 Audit Status 
+NexaCore Inc. USA 100% ₹48,240 cr ₹3,840 cr Audited 
+NexaCore Europe GmbH Germany 100% ₹18,480 cr ₹824 cr Audited 
+NexaCore BPM Services Ltd India 74.7% ₹9,845 cr ₹380 cr Unaudited at filing 
+NexaCore Digital Inc. Canada 84.0% ₹1,480 cr ₹(384) cr Unaudited — going concern 
+NexaCore Australia Pty Ltd Australia 100% ₹4,240 cr ₹248 cr Unaudited at filing 
+NexaCore Digital Inc. has recorded losses for four consecutive years with accumulated deficit of ₹840 crore and 
+negative net worth of ₹48 crore before intercompany loans. The Canadian statutory auditor is expected to issue a 
+going concern qualification by May 31, 2025. 
+SECTION 2: MANAGEMENT DISCUSSION AND ANALYSIS 
+Industry Context and Business Environment 
+Global IT services revenue growth moderated to approximately 5.8% in CY2024 as enterprise discretionary 
+spending remained cautious, particularly in North America and Europe. 
+NexaCore's consolidated revenue grew 7.3% in reported rupee terms and 5.1% in constant currency for FY2025, 
+within the Company's revised guidance range of 5%–7% in constant currency. However, this falls short of the 8%–
+10% constant currency growth originally guided at the start of the year. The revenue shortfall was concentrated in 
+the BFSI vertical in North America during the first half of FY2025, where large banking clients deferred 
+discretionary programs, delaying an estimated ₹2,100 crore of revenue from H1 into H2. Recovery in H2 was 
+partial. 
+Revenue by Industry Vertical: 
+=== PAGE 3 ===
+Vertical FY2025 (₹ cr)  FY2024 (₹ cr) Y oY % CC % 
+Banking, Financial Services (BFSI) 30,716 29,362 +4.6% +2.8% 
+Retail & Consumer 14,768 13,763 +7.3% +5.2% 
+Manufacturing 14,276 12,846 +11.1%  +9.2% 
+Communication & Media 9,254 9,819 -5.8% -7.1% 
+Life Sciences & Healthcare 8,878 7,901 +12.4%  +10.6% 
+Energy, Utilities & Resources 8,387 7,528 +11.4%  +9.7% 
+Hi-Tech & Others 12,171 10,538 +15.5%  +13.8% 
+Total 98,450 91,757 +7.3% +5.1% 
+Communication & Media declined 7.1% in constant currency for the second consecutive year; large deal TCV fell 
+66.7% to USD 80 mn; strategic review including potential divestment is underway. 
+The BFSI vertical, at 31.2% of revenue, represents the Company's largest single vertical. One significant BFSI 
+client generating approximately ₹2,840 crore of annual revenue has communicated a potential 15%–20% reduction 
+in technology spending for FY2026, representing a revenue risk of ₹426–568 crore. 
+Profitability Analysis 
+Consolidated operating margin (EBIT margin) for FY2025 was 19.8%, compared to 21.4% in FY2024 — a 
+compression of 160 basis points. This marks the fourth consecutive year of operating margin decline from the peak 
+of 24.6% in FY2022. 
+Operating Margin Bridge: 
+Factor Basis Points  
+FY2024 EBIT Margin 21.4% 
+Revenue mix shift to lower-margin segments -70 bps 
+Wage inflation (effective April 2024) -110 bps 
+Subcontracting and third-party cost increases -50 bps 
+Currency impact (INR appreciation) -30 bps 
+Fresher hiring optimization savings +40 bps 
+Automation and delivery pyramid rationalization +30 bps 
+Facility and travel cost reductions +20 bps 
+FY2025 EBIT Margin 19.8% 
+Employee costs (+10.1%) and subcontracting costs (+23.9% restated) both grew materially faster than revenue 
+(+7.3%), driving the 160 bps margin compression. 
+Exceptional item: ₹412 crore — Reichmann Automotive GmbH SAP S/4HANA delivery dispute settlement (EUR 
+22 mn cash + EUR 22 mn remediation services); recognised Q3 FY2025; no insurance recovery. 
+SECTION 3: CONSOLIDATED STATEMENT OF PROFIT AND LOSS 
+For the Year Ended March 31, 2025 (₹ in crore) 
+=== PAGE 4 ===
+Particulars FY2025  FY2024 Change % 
+Revenue from Operations 98,450 91,757 +7.3% 
+Other Income 2,840 2,725 +4.2% 
+Total Income 101,290 94,482 +7.2% 
+EXPENSES    
+Employee Benefit Expenses 57,680 52,410 +10.1% 
+As % of Revenue 58.6% 57.1% +150 bps 
+Subcontracting & Third-Party Costs 9,124 7,362 +23.9% 
+As % of Revenue 9.3% 8.0% +130 bps 
+Depreciation & Amortisation 3,412 2,894 +17.9% 
+Finance Costs 420 380 +10.5% 
+Other Operating Expenses 8,724 9,008 -3.2% 
+Exceptional Item — Reichmann Settlement 412 — — 
+Total Expenses 79,772 72,054 +10.7% 
+Profit Before Tax 21,518 21,808 -1.3% 
+Current Tax Expense 7,640 7,980 -4.3% 
+Deferred Tax Credit (352) (290) — 
+Total Tax Expense 7,288 7,690 -5.2% 
+Profit After Tax (PAT) 14,230 14,118 +0.8% 
+Other Comprehensive Income (OCI) 450 246 +83.0% 
+Total Comprehensive Income 14,680 14,364 +2.2% 
+EBITDA 22,922 22,357 +2.5% 
+EBITDA Margin 23.3% 24.4% -110 bps 
+EBIT (Operating Profit) 19,510 19,463 +0.2% 
+EBIT Margin 19.8% 21.4% -160 bps 
+Earnings Per Share    
+Basic EPS (₹) 38.14 37.74 +1.1% 
+Diluted EPS (₹) 38.06 37.66 +1.1% 
+Weighted Average Shares — Basic (crore) 373.10 374.14 — 
+Weighted Average Shares — Diluted (crore) 373.86 374.92 — 
+=== PAGE 5 ===
+Five-Y ear Income Statement Trend: 
+Particulars FY2025 FY2024 FY2023 FY2022 FY2021 
+Revenue (₹ cr) 98,450 91,757 84,240 72,480 58,640 
+Revenue Growth 7.3% 8.9% 16.3% 23.6% — 
+EBITDA Margin 23.3% 24.4% 25.9% 27.8% 26.4% 
+EBIT Margin 19.8% 21.4% 22.8% 24.6% 22.6% 
+PAT (₹ cr) 14,230 14,118 13,840 12,480 9,840 
+PAT Margin 14.5% 15.4% 16.4% 17.2% 16.8% 
+Basic EPS (₹) 38.14 37.74 36.98 33.28 26.24 
+EPS Growth 1.1% 2.1% 11.1% 26.8% — 
+Revenue growth has decelerated each year from 23.6% in FY2022 to 7.3% in FY2025. Every margin metric has 
+deteriorated for three to four consecutive years. EBIT margin has compressed 480 basis points from its FY2022 
+peak of 24.6% to 19.8% in FY2025. PA T grew only 0.8% in FY2025 against revenue growth of 7.3%, indicating 
+significant margin pressure. EPS growth has decelerated from 26.8% in FY2022 to 1.1% in FY2025. 
+SECTION 4: CONSOLIDATED BALANCE SHEET 
+As at March 31, 2025 (₹ in crore) 
+ASSETS Mar 31, 2025  Mar 31, 2024 
+NON-CURRENT ASSETS   
+Property, Plant & Equipment (Net Block) 6,216 5,984 
+Capital Work-in-Progress 480 320 
+Right-of-Use Assets 4,124 3,840 
+Goodwill on Consolidation 7,640 7,640 
+Other Intangible Assets 2,840 3,120 
+Non-Current Investments 9,420 8,160 
+Deferred Tax Assets (Net) 1,840 1,480 
+Other Non-Current Assets 5,880 5,616 
+Total Non-Current Assets 38,440 36,160 
+CURRENT ASSETS   
+Current Investments 14,560 11,104 
+Trade Receivables (Net of ECL Provision ₹840 cr) 18,420 15,940 
+Cash and Cash Equivalents 8,240 7,480 
+Other Bank Balances (Deposits > 3 months) 4,240 4,140 
+=== PAGE 6 ===
+ASSETS Mar 31, 2025  Mar 31, 2024 
+Unbilled Revenue (Current) 3,840 3,160 
+Other Current Assets 5,460 4,976 
+Total Current Assets 54,760 46,800 
+TOTAL ASSETS 93,200 82,960 
+EQUITY AND LIABILITIES   
+EQUITY   
+Equity Share Capital (Face Value ₹5; 372.24 crore shares) 1,860 1,871 
+Retained Earnings and Other Reserves 59,300 55,808 
+Non-Controlling Interests 2,040 2,557 
+Total Equity 63,200 60,236 
+NON-CURRENT LIABILITIES   
+Lease Liabilities (Non-Current) 3,240 2,840 
+Employee Benefit Obligations (Non-Current) 1,840 1,240 
+Deferred Revenue and Other Non-Current Liabilities 2,120 1,704 
+Total Non-Current Liabilities 7,200 5,784 
+CURRENT LIABILITIES   
+Trade Payables — MSME 284 248 
+Trade Payables — Others 4,536 4,392 
+Unearned Revenue (Deferred Revenue) 6,240 5,920 
+Employee Benefit Obligations (Current) 3,840 3,430 
+Lease Liabilities (Current) 840 720 
+Current Tax Liabilities 1,840 1,620 
+Other Current Liabilities 5,380 5,610 
+Total Current Liabilities 22,960 21,940 
+TOTAL EQUITY AND LIABILITIES 93,200 82,960 
+Key Balance Sheet Metrics: 
+Metric FY2025 FY2024 Movement 
+Net Cash Position (Cash + Investments − External 
+Debt) 
+₹32,220 
+cr 
+₹26,744 
+cr +₹5,476 cr 
+=== PAGE 7 ===
+Metric FY2025 FY2024 Movement 
+External Debt Nil Nil Zero debt maintained 
+Total Unbilled Revenue (Current + Non-Current) ₹6,086 cr ₹5,392 cr +12.9% 
+Unbilled Revenue Outstanding > 24 Months ₹766 cr ₹1,092 cr ₹382 cr without written client 
+confirmation 
+Working Capital (excl. financial investments) ₹27,260 
+cr 
+₹19,984 
+cr +₹7,276 cr (+36.4%) 
+Working Capital as % of Revenue 27.7% 21.8% +590 bps — significant deterioration 
+Current Ratio 2.17x 1.91x Improving on liquidity 
+Goodwill / Total Assets 8.2% 9.0% Goodwill unchanged; grown 10x in 5 
+years 
+Contingent Liabilities (Not Provided in Financial Statements): 
+Category FY2025 (₹ cr)  FY2024 (₹ cr) 
+Transfer Pricing Disputes — AY2019-20 to AY2022-23 2,140 1,840 
+Other Direct Tax Demands (Under Appeal) 1,040 960 
+Indirect Tax Disputes (GST and Service Tax) 564 544 
+Legal and Contractual Disputes 440 268 
+Total Contingent Liabilities 4,184 3,612 
+Contingent liabilities have grown 15.8% year-on-year and represent 29.4% of FY2025 PA T of ₹14,230 crore. 
+Transfer pricing disputes totalling ₹2,140 crore relate to the Income Tax Department's assessment of intercompany 
+service fees between the Indian parent and NexaCore Inc. (USA) and NexaCore Europe GmbH (Germany) for 
+assessment years FY2020 through FY2023. New demands of ₹592 crore were added during FY2025. Additionally, 
+the Company settled ₹156 crore of earlier demands through the Vivad se Vishwas II scheme in FY2025. An 
+additional off-balance-sheet obligation exists in the form of a put option granted to Zenith Capital Partners over its 
+25.3% stake in NexaCore BPM Services Limited, exercisable between FY2028 and FY2030 at 12x trailing 
+EBITDA — estimated at approximately ₹1,457 crore at FY2025 EBITDA levels. This obligation is not reflected in 
+contingent liabilities. 
+SECTION 5: CONSOLIDATED STATEMENT OF CASH FLOWS 
+For the Year Ended March 31, 2025 (₹ in crore) 
+Particulars FY2025  FY2024 
+A. OPERATING ACTIVITIES   
+Profit Before Tax 21,518 21,808 
+Add: Depreciation & Amortisation 3,412 2,894 
+Add: Finance Costs (Lease) 384 340 
+Add: Share-Based Compensation 480 420 
+=== PAGE 8 ===
+Particulars FY2025  FY2024 
+Add: ECL Provision on Receivables 284 196 
+Add: Exceptional Item (Reichmann) 412 — 
+Less: Interest and Dividend Income (2,114) (1,822) 
+Less: Net Investment Gains (426) (530) 
+Operating Profit Before Working Capital Changes 23,950 23,306 
+Increase in Trade Receivables (2,764) (1,894) 
+Increase in Unbilled Revenue (680) (440) 
+Increase in Other Assets (1,264) (466) 
+Increase in Trade Payables and Liabilities 554 1,194 
+Cash Generated from Operations 19,796 21,700 
+Income Taxes Paid (Net of Refunds) (7,614) (8,320) 
+Net Cash from Operating Activities (A) 12,182 13,380 
+B. INVESTING ACTIVITIES   
+Capital Expenditure — PP&E and Intangibles (3,120) (2,672) 
+Proceeds from PP&E Disposal 84 42 
+Acquisition Payment — Klar Analytics (deferred) (480) (1,240) 
+Net Purchase of Investments (2,236) (1,700) 
+Interest and Dividend Received 2,114 1,822 
+Other Investing Activities (20) (284) 
+Net Cash Used in Investing Activities (B) (3,658) (4,032) 
+C. FINANCING ACTIVITIES   
+Lease Liabilities Repaid (Principal + Interest) (1,164) (980) 
+Dividends Paid to Shareholders (9,676) (9,524) 
+Buyback of Equity Shares (Including Buyback Tax) (1,820) — 
+Proceeds from ESOP Exercises 128 96 
+Other Finance Costs (36) (40) 
+Net Cash Used in Financing Activities (C) (12,568) (10,448) 
+Net Change in Cash (A + B + C) (4,044) (1,100) 
+Opening Cash and Cash Equivalents 7,480 8,324 
+=== PAGE 9 ===
+Particulars FY2025  FY2024 
+Effect of Exchange Rate Changes on Cash 804 256 
+Closing Cash and Cash Equivalents 4,240 7,480 
+Free Cash Flow Analysis: 
+Particulars FY2025  FY2024 FY2023 FY2022 FY2021 
+Net Cash from Operating Activities (₹ cr) 12,182 13,380 14,240 13,480 10,240 
+Less: Capital Expenditure — Strict (₹ cr) (3,120) (2,672) (2,240) (1,984) (1,640) 
+Free Cash Flow — Strict Definition (₹ cr) 9,062 10,708 12,000 11,496 8,600 
+FCF Margin 9.2% 11.7% 14.2% 15.9% 14.7% 
+FCF as % of PAT 63.7% 75.8% 86.7% 92.1% 87.4% 
+Dividend Paid (₹ cr) 9,676 9,524 8,840 7,240 5,040 
+Dividend Payout / FCF 106.5%  89.2% 69.2% 60.9% 56.4% 
+Free cash flow has declined for three consecutive years from ₹12,000 crore in FY2023 to ₹9,062 crore in FY2025. 
+FCF as a percentage of PA T has fallen from 92.1% in FY2022 to 63.7% in FY2025 — well below the peer average 
+of 83.3%. Total dividends paid in FY2025 (₹9,676 crore) exceeded strict free cash flow generation (₹9,062 crore) 
+for the first time in the Company's history, representing a dividend payout ratio of 106.5% of FCF. The Company's 
+Dividend Distribution Policy targets a payout of 60%–80% of consolidated FCF over a rolling three-year period. 
+The FY2025 payout breaches the upper bound of this policy when measured against audited FCF. 
+Dividend and Capital Return: 
+Particulars FY2025  FY2024 FY2023 
+Interim Dividend Per Share (₹) 12.00 12.00 12.00 
+Final Dividend Per Share (₹) 14.00 14.00 12.00 
+Total Dividend Per Share (₹) 26.00 26.00 24.00 
+Total Dividend Outflow (₹ cr) 9,676 9,524 8,840 
+Buyback Amount (₹ cr) 1,820 — — 
+Shares Bought Back (crore) 2.14 — — 
+Buyback Price Per Share (₹) 850 — — 
+Total Capital Returned to Shareholders (₹ cr) 11,496 9,524 8,840 
+Total Capital Return as % of PAT 80.8% 67.5% 63.9% 
+ 
+SECTION 6: KEY FINANCIAL RATIOS AND PEER BENCHMARKING 
+A. Consolidated Financial Ratios — Five-Y ear Trend: 
+=== PAGE 10 ===
+Ratio FY2025  FY2024 FY2023 FY2022 FY2021 Trend 
+EBITDA Margin 23.3% 24.4% 25.9% 27.8% 26.4% ↓ Declining 
+EBIT Margin 19.8% 21.4% 22.8% 24.6% 22.6% ↓ 4 Consecutive Years  
+PAT Margin 14.5% 15.4% 16.4% 17.2% 16.8% ↓ 3 Consecutive Years  
+Return on Equity (ROE) 23.9% 25.1% 25.8% 27.4% 26.4% ↓ Declining 
+Return on Capital Employed (ROCE) 27.9% 29.4% 31.2% 33.4% 30.8% ↓ Declining 
+Days Sales Outstanding (DSO) 71.2 63.4 57.2 54.8 52.4 ↑ Worsening 5 Years 
+Working Capital / Revenue 27.7% 21.8% 19.4% 17.8% 16.4% ↑ Deteriorating 
+FCF / PAT 63.7% 75.8% 86.7% 92.1% 87.4% ↓ 3 Consecutive Years  
+Dividend Payout / FCF 106.5%  89.2% 69.2% 60.9% 56.4% ↑ Exceeds Policy 
+Employee Cost / Revenue 58.6% 57.1% 55.8% 54.2% 55.4% ↑ Rising 
+Capex / Revenue 3.2% 2.9% 2.7% 2.7% 2.8% ↑ Rising 
+Current Ratio 2.17x 1.91x 1.84x 1.72x 1.68x ✓ Improving 
+Basic EPS (₹) 38.14 37.74 36.98 33.28 26.24 ✓ Growing 
+EPS Growth 1.1% 2.1% 11.1% 26.8% — ↓ Decelerating 
+DSO has worsened every year for 5 consecutive years, deteriorating 18.8 days total — representing approximately 
+₹5,076 crore of additional cash tied up in receivables vs FY2021 performance. 
+B. Peer Benchmarking (FY2025): 
+Metric NexaCore  Infoedge 
+Systems 
+Zenith 
+Global 
+Apex 
+Digital 
+Globalink 
+IT 
+Peer 
+Average 
+Revenue (₹ cr) 98,450 1,42,840 84,240 62,480 48,240 — 
+CC Revenue Growth 5.1% 6.8% 7.4% 5.4% 9.2% 7.2% 
+EBIT Margin 19.8% 22.8% 21.2% 18.8% 17.2% 20.0% 
+PAT Margin 14.5% 17.2% 15.8% 14.0% 13.2% 15.1% 
+ROE 23.9% 28.4% 25.8% 22.4% 19.8% 24.1% 
+ROCE 27.9% 32.4% 30.4% 27.4% 24.8% 28.8% 
+DSO (Days) 71.2 62.4 64.8 68.4 58.4 63.5 
+FCF / PAT 63.7% 89.6% 83.5% 81.4% 94.2% 87.2% 
+Revenue / Employee (₹ 
+lakh) 51.5 58.4 54.8 48.4 44.8 51.6 
+Attrition Rate 17.4% 13.8% 14.2% 15.4% 16.2% 14.9% 
+=== PAGE 11 ===
+NexaCore has the lowest FCF/PA T (63.7% vs peer average 87.2%), second-highest DSO (71.2 days), and revenue 
+growth below 4 of 5 peers — indicating below-peer-average cash conversion and operational efficiency. 
+C. Investor Metrics: 
+Metric FY2025  FY2024 
+NSE Closing Price (March 31) ₹842 ₹910 
+52-Week High ₹992 ₹968 
+52-Week Low ₹824 ₹840 
+Market Capitalisation (₹ cr) 3,13,481 3,40,182 
+Book Value Per Share (₹) 169.35 161.00 
+Price-to-Earnings (P/E) Ratio 22.1x 24.1x 
+Price-to-Book Value (P/B) 5.1x 5.5x 
+EV / EBITDA 14.2x 15.8x 
+FII Holding 24.73%  26.42% 
+Promoter Holding 28.40%  28.60% 
+Domestic Mutual Fund Holding 19.99% 19.84% 
+ SECTION 7: RISK FACTORS, AUDITOR'S REPORT AND GOVERNANCE 
+A. Key Risk Factors 
+1. Revenue Concentration Risk: North America represents 56.0% of consolidated revenue. The Company's top 20 
+clients contribute 54.8% of revenue. A slowdown in US enterprise technology spending could materially impact 
+revenue growth. One BFSI client generating ₹2,840 crore annually has indicated a potential 15%–20% spending 
+reduction for FY2026. 
+2. Operating Margin Risk: Operating margin has compressed 480 basis points from its FY2022 peak. Employee 
+costs and subcontracting costs are both growing faster than revenue. The planned margin recovery in FY2026 
+depends on successful execution of fresher hiring (18,000–22,000 planned), subcontractor reduction (4,200 roles), 
+and a wage freeze for the broader workforce — all subject to execution uncertainty in a high-attrition environment. 
+3. Talent and Attrition Risk: V oluntary attrition increased from 14.9% in FY2024 to 17.4% in FY2025. Attrition 
+in AI and cloud skill areas was between 22.8% and 26.4%. The Company's compensation for AI and cloud roles is 
+estimated to be 12%–18% below market median. No overall wage increase is planned for the broader FY2026 
+workforce. Average employee tenure declined from 4.6 years to 4.2 years. 
+4. Goodwill Impairment Risk: The Company carries goodwill of ₹7,640 crore, entirely allocated to the AI and 
+Data Analytics CGU following the Klar Analytics GmbH acquisition (December 2023, EUR 284 million). The 
+annual impairment test uses a terminal growth rate of 5.8% — above the industry benchmark range of 2.5%–4.0% 
+— with a headroom of only ₹820 crore. A reduction in the terminal growth rate to 3.5% would reduce headroom to 
+₹180 crore; at 2.5%, an impairment charge of approximately ₹280 crore would be triggered. Additionally, 18 of the 
+42 designated key employees at Klar Analytics (42.9%) have resigned since acquisition, including the Chief 
+Technology Officer in October 2024. 
+5. Legal and Regulatory Risk: Transfer pricing disputes of ₹2,140 crore are pending before the Income Tax 
+Appellate Tribunal. A US Department of Justice Civil Investigative Demand was received by NexaCore Inc. on 
+April 11, 2025 regarding H-1B visa practices for FY2021–FY2023. Potential outcomes include civil penalties and, 
+in severe scenarios, debarment from the H-1B program — which would significantly impair the ability to deploy 
+=== PAGE 12 ===
+talent to US client sites, affecting 56% of revenue. The Company retained Baker McKenzie LLP as external 
+counsel. No provision has been made as the outcome cannot be estimated. 
+6. Subsidiary and Audit Risk: Three subsidiaries representing 15.3% of consolidated revenue were unaudited at 
+the filing date of this Annual Report. NexaCore Digital Inc. is expected to receive a going concern qualification 
+from its Canadian auditor. NexaCore BPM Services Limited has ₹100 crore of trade receivables that remained 
+unreconciled following an ERP migration. 
+B. Independent Auditor's Report — Summary 
+Auditor: S.R. Khandelwal & Associates LLP, Chartered Accountants | FRN: 112843W/W-200041 
+Audit Opinion: Unmodified — The financial statements give a true and fair view of the consolidated financial 
+position of NexaCore Technologies Limited as at March 31, 2025. 
+Emphasis of Matter Paragraphs (opinion not modified): 
+1. Exceptional charge of ₹412 crore recognised during the year relating to the Reichmann Automotive GmbH 
+contractual dispute settlement (Note 17). 
+2. Civil Investigative Demand received by NexaCore Inc. from the US Department of Justice on April 11, 
+2025 relating to H-1B visa application practices. Outcome is uncertain and no provision has been 
+recognised. 
+Key Audit Matters: 
+KAM Issue Auditor Finding 
+Revenue 
+Recognition — 
+Fixed-Price 
+Contracts 
+54% of revenue from fixed-price 
+contracts using percentage-of-
+completion method. Requires 
+management estimation of costs to 
+complete across 2,412 active 
+contracts. 
+Systematic cost underestimation in Engineering 
+Services — average 8.4% of contract value. 38 of 84 
+sampled contracts (45.2%) lacked independent review 
+before revenue recognition. Significant Deficiency 
+identified in internal controls. 
+Goodwill 
+Impairment 
+Assessment 
+₹7,640 crore goodwill in AI/Data 
+Analytics CGU. Annual VIU test 
+using discounted cash flow model. 
+Terminal growth rate of 5.8% is at the aggressive end 
+of market benchmarks (range observed: 2.5%–4.5%). 
+Headroom of ₹820 crore is narrow. At 2.5% terminal 
+growth rate, impairment of ₹280 crore would arise. 
+Independent third-party review committed for FY2026. 
+Transfer Pricing 
+Disputes 
+Intercompany service fees between 
+Indian parent and overseas 
+subsidiaries disputed for AY2019-20 
+to AY2022-23. Outstanding exposure: 
+₹2,140 crore. 
+₹156 crore settled via government settlement scheme 
+in FY2025 — implies some technical merit in the 
+Department's position for settled items. Assessed as 
+"possible but not probable" of adverse outcome overall. 
+NexaCore Digital 
+Inc. — DTA 
+Recoverability 
+Deferred tax asset of ₹84 crore on 4-
+year accumulated losses. Recognition 
+requires probability of future taxable 
+profits. 
+Assessed as a "close judgment." Entity has missed its 
+own revenue forecasts for two consecutive years. 
+Going concern qualification expected from Canadian 
+auditor. 
+Auditor's Observation — Consistency of Other Information: The CEO's letter to shareholders states free cash 
+flow of ₹12,840 crore. The audited Statement of Cash Flows yields FCF of ₹9,062 crore under the standard 
+definition (operating cash flow less capital expenditure). The auditor has requested that management provide 
+prominent reconciliation of these two figures in future shareholder communications. Management has committed to 
+do so. The Audit Committee has formally acknowledged this inconsistency. 
+Internal Financial Controls — Significant Deficiencies: 
+=== PAGE 13 ===
+ Deficiency 1: Revenue recognition cost-to-complete estimation in Engineering Services without 
+independent review (45.2% of sampled contracts). Remediation: Independent Cost Review protocol and 
+Contract Margin Review Board established Q4 FY2025. 
+ Deficiency 2: Six vendors received payments before completion of mandatory background verification. 
+Remediation: Automated SAP vendor master controls implemented December 2024. 
+C. Corporate Governance Summary 
+Governance Metric FY2025 FY2024 FY2023 
+CEO Total Remuneration (₹ cr) 41.84 38.40 34.80 
+CEO Pay Growth vs PA T Growth +8.9% vs +0.8% — — 
+CEO-to-Median Employee Pay Ratio 53.4x 52.1x 48.4x 
+V ariable Pay Approved (% of Maximum) 72% 85% 90% 
+Ethics Hotline Complaints 284 248 192 
+Substantiated Complaints 48 (16.9%) 38 (15.3%)  28 (14.6%) 
+POSH Complaints Filed / Resolved 24 / 22 18 / 16 14 / 12 
+Insider Trading Window Breach 1 (self-reported to SEBI) 0 0 
+Audit Committee Meetings 8 7 6 
+Secretarial Audit Observations 3 1 0 
+CEO remuneration grew 8.9% in FY2025 against PA T growth of 0.8% — remuneration growing approximately 11 
+times faster than earnings. The CEO missed revenue growth, PAT growth, and DSO improvement targets for 
+FY2025 yet received 72% of maximum variable pay through Nomination and Remuneration Committee 
+discretionary adjustment. The CEO-to-median employee pay ratio has increased for three consecutive years from 
+48.4x to 53.4x. 
+SECTION 8: ESG AND SUSTAINABILITY DISCLOSURES 
+A. Environmental Performance: 
+Metric Unit FY2025 FY2024 FY2023 FY2027 Target  
+Scope 1 GHG Emissions (Direct) tCO2e 4,840 4,480 4,240 — 
+Scope 2 GHG Emissions (Electricity) tCO2e 84,240 92,840 98,240 — 
+Scope 3 GHG Emissions (Business Travel) tCO2e 1,48,240 1,24,840 1,08,240 87,136 
+Net GHG Emissions (After Carbon Offsets) tCO2e 1,97,320 2,02,160 2,06,720 — 
+Carbon Offsets Retired tCO2e  40,000 20,000 10,000 — 
+Renewable Energy Share % 40.0% 35.0% 28.4% — 
+Total Energy Consumed GJ 8,40,240  7,84,200 7,24,840 — 
+Water Consumed KL 1,24,840  1,18,240 1,12,480 — 
+E-Waste Recycled Through Certified V endors % 100.0% 100.0% 100.0% Maintained 
+=== PAGE 14 ===
+Metric Unit FY2025 FY2024 FY2023 FY2027 Target  
+CSR Spend (₹ cr) / Statutory Obligation (₹ cr) — 281 / 272 244 / 232 210 / 198 — 
+Scope 3 emissions are 19.1% above the FY2022 baseline against a FY2027 target of -30%; a reduction of 41.2% in 
+2 years is required — not achievable at current trajectory.. 
+Renewable energy share improved from 35.0% to 40.0% in FY2025, driven by commissioning of 4.2 MW rooftop 
+solar and a 7-year Power Purchase Agreement signed with a Rajasthan wind energy developer. Scope 2 emissions 
+declined as a result. CSR spend of ₹281 crore exceeded the statutory obligation of ₹272 crore; NexaSkill 
+Foundation trained 84,240 youth in FY2025 with a placement rate of 45.4%. 
+B. Employee and Social Metrics: 
+Metric FY2025  FY2024 FY2023 
+Total Permanent Employees 1,91,204 1,87,863 1,84,240 
+Women Employees 34.8% 34.3% 33.8% 
+Employees with Disabilities 284 248 210 
+V oluntary Attrition (IT Services) 17.4% 14.9% 12.4% 
+Average Employee Tenure (Years) 4.2 4.6 5.1 
+Revenue per Employee (₹ lakh) 51.5 48.8 45.7 
+Cost per Employee (₹ lakh) 30.2 27.9 25.8 
+Training Hours per Employee 96.4 86.7 78.4 
+L&D Spend as % of Employee Costs 0.83% 0.80% 0.76% 
+Client NPS (Net Promoter Score) 54 58 62 
+Employee NPS (eNPS) 28 34 41 
+POSH Complaints Filed 24 18 14 
+Workplace Accidents (Reportable) 4 2 — 
+Workplace Fatalities 0 0 0 
+Client NPS (62→54) and eNPS (41→28) are both in 3-year structural decline; eNPS of 28 is below the top-quartile 
+IT industry benchmark of 40–60. 
+SECTION 9: OUTLOOK, CERTIFICATIONS AND CLOSING DECLARATIONS 
+A. FY2026 Guidance and Management Outlook 
+Parameter FY2026 Guidance FY2025 Actual  
+Revenue Growth (Constant Currency) 6% – 9% 5.1% 
+EBIT Margin 20.0% – 21.0% 19.8% 
+Effective Tax Rate 32.5% – 34.0% 33.9% 
+Capital Expenditure (Strict) ₹3,200 – ₹3,600 crore ₹3,120 crore 
+=== PAGE 15 ===
+Parameter FY2026 Guidance FY2025 Actual  
+Net Headcount Addition 8,000 – 12,000 3,341 
+Fresher Hiring Target 18,000 – 22,000 12,840 
+DSO Target 64.0 days 71.2 days 
+Margin recovery levers: fresher hiring (+80–100 bps), subcontractor reduction 4,200 roles (+40–60 bps), wage 
+freeze broader workforce (+30–40 bps), ARIA mix improvement (+20–30 bps). 
+DSO target of 64.0 days (from 71.2) would release ₹1,943 crore in working capital; automated billing system (₹48 
+crore) in implementation Q1 FY2026. 
+Subsequent Events (Post March 31, 2025): 
+ April 8, 2025: 7-year managed services contract signed with a leading North American insurance group; 
+TCV USD 420 million. Revenue ramp over 18 months. 
+ April 11, 2025: NexaCore Inc. received a Civil Investigative Demand from the US Department of Justice 
+regarding H-1B visa application practices for FY2021–FY2023. Baker McKenzie LLP retained. Outcome 
+cannot be estimated; no provision made. 
+ April 17, 2025: Board of Directors recommended final dividend of ₹14 per equity share for FY2025, 
+subject to shareholder approval at the AGM on July 14, 2025. 
+B. Five-Y ear Financial Summary 
+Particulars FY2025  FY2024 FY2023 FY2022 FY2021 
+Revenue (₹ cr) 98,450 91,757 84,240 72,480 58,640 
+EBITDA (₹ cr) 22,922 22,357 21,840 20,124 15,480 
+EBIT (₹ cr) 19,510 19,463 19,240 17,840 13,240 
+PAT (₹ cr) 14,230 14,118 13,840 12,480 9,840 
+Basic EPS (₹) 38.14 37.74 36.98 33.28 26.24 
+Dividend Per Share (₹) 26.00 26.00 24.00 20.00 14.00 
+Free Cash Flow — Strict (₹ cr) 9,062 10,708 12,000 11,496 8,600 
+Total Assets (₹ cr) 93,200 84,960 76,840 64,240 52,480 
+Total Equity (₹ cr) 63,200 60,236 55,484 48,240 38,840 
+Net Cash Position (₹ cr) 32,220 26,744 22,640 18,480 14,240 
+Goodwill (₹ cr) 7,640 7,640 5,120 2,840 840 
+DSO (Days) 71.2 63.4 57.2 54.8 52.4 
+ROE 23.9% 25.1% 25.8% 27.4% 26.4% 
+ROCE 27.9% 29.4% 31.2% 33.4% 30.8% 
+C. CEO and CFO Certification 
+As required under Regulation 17(8) of SEBI (Listing Obligations and Disclosure Requirements) Regulations, 2015 
+=== PAGE 16 ===
+We, Mr. Rajeev Khanna, Chief Executive Officer and Managing Director, and Ms. Priya Nambiar, Executive 
+Director and Chief Financial Officer, hereby certify to the best of our knowledge and belief that the financial 
+statements for the year ended March 31, 2025 do not contain any materially untrue statement, give a true and fair 
+view of the Company's affairs, and are in compliance with applicable accounting standards and regulations. The 
+Company's internal financial controls are adequate and operating effectively, subject to the two Significant 
+Deficiencies identified by the Statutory Auditors — relating to revenue recognition cost-to-complete estimation in 
+Engineering Services and vendor onboarding approval controls — both of which are in the process of remediation 
+as described in Section 7B of this Report. 
+Mr. Rajeev Khanna Ms. Priya Nambiar 
+CEO & Managing Director Executive Director & CFO 
+DIN: 07284193 DIN: 08412066 
+Place: Hyderabad Date: April 17, 2025 
+D. Declaration by Board Chairman 
+I, Mr. Arvind Subramaniam, Chairman of the Board of Directors, confirm that the Board has reviewed this Annual 
+Report and that to the best of the Board's knowledge, it presents a complete and accurate picture of the Company's 
+financial performance, governance, and risk position for FY2025. The Board specifically acknowledges three 
+matters requiring shareholder attention: the FCF definition inconsistency between shareholder communications and 
+audited statements, the narrow goodwill impairment headroom which will be subject to independent third-party 
+review in FY2026, and the post-balance-sheet DoJ inquiry which the Company is addressing with full transparency 
+and external legal support. 
+Mr. Arvind Subramaniam 
+Chairman, Board of Directors | DIN: 00248432 
+Place: Hyderabad | Date: April 17, 2025 
+ 
+This Annual Report has been approved by the Board of Directors at its meeting held on April 17, 2025 and 
+submitted to BSE Limited and National Stock Exchange of India Limited on the same date in accordance with 
+Regulation 34 of SEBI (Listing Obligations and Disclosure Requirements) Regulations, 2015. 

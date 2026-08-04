@@ -1,0 +1,164 @@
+{
+  "focus_company": "NexaCore Technologies",
+  "fiscal_year": "FY2025",
+  "companies_compared": [
+    "NexaCore Technologies",
+    "Infoedge Systems"
+  ],
+  "metric_comparisons": [
+    {
+      "metric": "Revenue (Rs cr)",
+      "unit": "",
+      "higher_is_better": true,
+      "focus_company_value": 98450.0,
+      "peer_values": {
+        "Infoedge Systems": 142840.0
+      },
+      "peer_average": 142840.0,
+      "focus_vs_peer_avg_pct": -31.1,
+      "focus_rank": 2,
+      "total_ranked": 2,
+      "flag": "underperform"
+    },
+    {
+      "metric": "CC Revenue Growth (%)",
+      "unit": "",
+      "higher_is_better": true,
+      "focus_company_value": 5.1,
+      "peer_values": {
+        "Infoedge Systems": 6.8
+      },
+      "peer_average": 6.8,
+      "focus_vs_peer_avg_pct": -25.0,
+      "focus_rank": 2,
+      "total_ranked": 2,
+      "flag": "underperform"
+    },
+    {
+      "metric": "EBIT Margin (%)",
+      "unit": "",
+      "higher_is_better": true,
+      "focus_company_value": 19.8,
+      "peer_values": {
+        "Infoedge Systems": 22.8
+      },
+      "peer_average": 22.8,
+      "focus_vs_peer_avg_pct": -13.2,
+      "focus_rank": 2,
+      "total_ranked": 2,
+      "flag": "underperform"
+    },
+    {
+      "metric": "PAT Margin (%)",
+      "unit": "",
+      "higher_is_better": true,
+      "focus_company_value": 14.5,
+      "peer_values": {
+        "Infoedge Systems": 17.2
+      },
+      "peer_average": 17.2,
+      "focus_vs_peer_avg_pct": -15.7,
+      "focus_rank": 2,
+      "total_ranked": 2,
+      "flag": "underperform"
+    },
+    {
+      "metric": "Return on Equity (%)",
+      "unit": "",
+      "higher_is_better": true,
+      "focus_company_value": 23.9,
+      "peer_values": {
+        "Infoedge Systems": 28.4
+      },
+      "peer_average": 28.4,
+      "focus_vs_peer_avg_pct": -15.8,
+      "focus_rank": 2,
+      "total_ranked": 2,
+      "flag": "underperform"
+    },
+    {
+      "metric": "Return on Capital Employed (%)",
+      "unit": "",
+      "higher_is_better": true,
+      "focus_company_value": 27.9,
+      "peer_values": {
+        "Infoedge Systems": 32.4
+      },
+      "peer_average": 32.4,
+      "focus_vs_peer_avg_pct": -13.9,
+      "focus_rank": 2,
+      "total_ranked": 2,
+      "flag": "underperform"
+    },
+    {
+      "metric": "Days Sales Outstanding (days)",
+      "unit": "",
+      "higher_is_better": false,
+      "focus_company_value": 71.2,
+      "peer_values": {
+        "Infoedge Systems": 62.4
+      },
+      "peer_average": 62.4,
+      "focus_vs_peer_avg_pct": 14.1,
+      "focus_rank": 2,
+      "total_ranked": 2,
+      "flag": "underperform"
+    },
+    {
+      "metric": "FCF / PAT (%)",
+      "unit": "",
+      "higher_is_better": true,
+      "focus_company_value": 63.7,
+      "peer_values": {
+        "Infoedge Systems": 89.6
+      },
+      "peer_average": 89.6,
+      "focus_vs_peer_avg_pct": -28.9,
+      "focus_rank": 2,
+      "total_ranked": 2,
+      "flag": "underperform"
+    },
+    {
+      "metric": "Revenue per Employee (Rs lakh)",
+      "unit": "",
+      "higher_is_better": true,
+      "focus_company_value": 51.5,
+      "peer_values": {
+        "Infoedge Systems": 58.4
+      },
+      "peer_average": 58.4,
+      "focus_vs_peer_avg_pct": -11.8,
+      "focus_rank": 2,
+      "total_ranked": 2,
+      "flag": "underperform"
+    },
+    {
+      "metric": "Attrition Rate (%)",
+      "unit": "",
+      "higher_is_better": false,
+      "focus_company_value": 17.4,
+      "peer_values": {
+        "Infoedge Systems": 13.8
+      },
+      "peer_average": 13.8,
+      "focus_vs_peer_avg_pct": 26.1,
+      "focus_rank": 2,
+      "total_ranked": 2,
+      "flag": "underperform"
+    }
+  ],
+  "narrative_summary": "NexaCore Technologies was benchmarked directly against peer Infoedge Systems for FY2025 across 10 metrics. Key areas of underperformance vs peer average include Revenue (Rs cr), CC Revenue Growth (%), EBIT Margin (%), PAT Margin (%), Return on Equity (%), Return on Capital Employed (%), Days Sales Outstanding (days), FCF / PAT (%), Revenue per Employee (Rs lakh), Attrition Rate (%).",
+  "key_strengths": [],
+  "key_weaknesses": [
+    "Revenue (Rs cr)",
+    "CC Revenue Growth (%)",
+    "EBIT Margin (%)",
+    "PAT Margin (%)",
+    "Return on Equity (%)",
+    "Return on Capital Employed (%)",
+    "Days Sales Outstanding (days)",
+    "FCF / PAT (%)",
+    "Revenue per Employee (Rs lakh)",
+    "Attrition Rate (%)"
+  ]
+}
