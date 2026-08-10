@@ -1,0 +1,47 @@
+# -------------------------
+# Python
+# -------------------------
+venv/
+__pycache__/
+*.py[cod]
+
+# -------------------------
+# Environment variables
+# -------------------------
+.env
+
+# -------------------------
+# Runtime data
+# -------------------------
+backend/orchestrator/data/
+backend/Extraction agent/work/
+
+uploads/
+vector_store/
+*.db
+
+# FAISS generated files
+*.faiss
+*.pkl
+
+# Generated reports (if your app creates them)
+reports/
+
+# -------------------------
+# Frontend
+# -------------------------
+node_modules/
+dist/
+.vite/
+
+# -------------------------
+# Logs
+# -------------------------
+logs/
+*.log
+
+# -------------------------
+# OS files
+# -------------------------
+.DS_Store
+Thumbs.db

@@ -1,0 +1,151 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-parchment-50 text-ledger-950 font-sans bg-brand-mesh min-h-screen;
+    background-attachment: fixed;
+  }
+  ::selection {
+    @apply bg-violet-500/30 text-ledger-950;
+  }
+  :focus-visible {
+    outline: 2px solid #8B5CF6;
+    outline-offset: 2px;
+  }
+  /* Modern custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgba(139, 92, 246, 0.03);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(139, 92, 246, 0.2);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(139, 92, 246, 0.4);
+  }
+}
+
+@layer components {
+  /* Hairline divider that still reads as a rule between rows */
+  .ledger-rule {
+    @apply border-t border-ledger-950/[0.06];
+  }
+
+  /* Citation tab — signature element: small amber/coral badge */
+  .cite-tab {
+    @apply relative inline-flex items-center justify-center align-super;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.625rem;
+    font-weight: 600;
+    line-height: 1;
+    height: 18px;
+    min-width: 18px;
+    padding: 0 5px;
+    margin-left: 3px;
+    border-radius: 6px;
+    color: #DB8B0B;
+    background: rgba(245, 165, 36, 0.14);
+    border: 1px solid rgba(245, 165, 36, 0.35);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .cite-tab:hover {
+    background: #F5A524;
+    color: #ffffff;
+    transform: translateY(-2px) scale(1.1);
+    box-shadow: 0 4px 12px rgba(245, 165, 36, 0.4);
+  }
+
+  .field {
+    @apply w-full rounded-xl border border-slate-200 bg-white/90 px-4 py-3 text-sm text-ledger-950 placeholder:text-ledger-950/[0.35] focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 outline-none transition-all duration-200 shadow-sm shadow-slate-100/50;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-white transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none shadow-[0_4px_14px_rgba(139,92,246,0.35)];
+    background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 50%, #14B8A6 100%);
+  }
+  .btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.5);
+  }
+  .btn-primary:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white/70 px-5 py-3 text-sm font-semibold text-ledger-700 hover:border-violet-400 hover:text-violet-600 hover:bg-violet-50/50 hover:shadow-md transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+
+  /* Glassmorphism Cards */
+  .card {
+    @apply rounded-2xl border border-slate-200/60 bg-white/80 backdrop-blur-md shadow-[0_4px_20px_rgba(30,27,60,0.02)] transition-all duration-300;
+  }
+  .card-hover {
+    @apply hover:shadow-[0_12px_36px_rgba(90,75,176,0.08)] hover:border-violet-300/40 hover:-translate-y-1;
+  }
+
+  .eyebrow {
+    @apply font-mono text-[0.68rem] uppercase tracking-[0.16em] font-semibold text-violet-600;
+  }
+
+  .chip {
+    @apply rounded-xl border px-4 py-2 text-sm font-medium transition-all duration-200;
+  }
+
+  /* Interactive gradient text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-brand-gradient;
+  }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-scale-in {
+  animation: scale-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes pop-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-pop-in {
+  animation: pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-shimmer {
+  background: linear-gradient(90deg, #8B5CF6, #14B8A6, #FB7185, #8B5CF6);
+  background-size: 300% 100%;
+  animation: shimmer 2.5s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
