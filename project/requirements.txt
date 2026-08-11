@@ -1,0 +1,35 @@
+# Database
+SQLAlchemy>=2.0
+
+# Document Agent — Python dependencies
+
+# --- PDF parsing ---
+pymupdf==1.28.0
+
+# --- OCR (scanned PDF fallback) ---
+# NOTE: pytesseract is only a wrapper. You must also install the Tesseract
+# OCR engine itself separately — see Document_agent_setup.md.
+pytesseract==0.3.13
+pillow==12.1.1
+
+# --- Chunking ---
+langchain-core==1.4.9
+langchain-text-splitters==1.1.2
+langchain-community==0.4.2
+
+# --- Embeddings ---
+sentence-transformers==5.6.0
+
+# --- Vector database ---
+faiss-cpu==1.14.3
+
+# --- API layer ---
+fastapi==0.136.1
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+
+# --- Research Agent LLM (optional; falls back to local heuristics if unset) ---
+langchain-groq>=1.0.0
+
+# --- Report Agent: PDF generation ---
+reportlab==4.2.5
